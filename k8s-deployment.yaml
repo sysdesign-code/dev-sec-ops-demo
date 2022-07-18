@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notesapp-deployment-3000
+spec:
+  selector:
+    matchLabels:
+      app: notes
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: notes
+    spec:
+      containers:
+      - name: notesserver
+        image: notes-app-image
+        env:
+        - name: "PORT"
+          value: "3000"

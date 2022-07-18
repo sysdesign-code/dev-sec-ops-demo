@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: notes-app
+spec:
+  containers:
+  - name: notesserver
+    image: notes-app-image
+ #   image: us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
