@@ -4,7 +4,7 @@
  * @param {!Object} message Event payload.
  * @param {!Object} context Metadata for the event.
  */
- exports.helloPubSub = (message, context) => {
+ exports.cloudDeployApproval = (message, context) => {
 
     const attributes = message.attributes
     action = attributes.Action;
