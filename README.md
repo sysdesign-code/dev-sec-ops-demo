@@ -1,11 +1,96 @@
-# dev-sec-ops-demo
+
+# Building secure software delivery pipeline on Google Cloud - This is the content for the blog post
+
+
+A very brief introduction text about the DevOps and DevSecOps concept. 
+Introduction to secure CI/CD pipeline.
+Introduction to what this blog post is going to be about.
+
+Outline -
+
+The need of a secure software delivery pipeline (why)
+Google cloud native services used in the solution (What)
+How are we going to accomplish this goal by putthing these services togather (How)
+
+
+### Solution Details - Design diagram of the complete flow:
+
+Diagram of the secure CI/CD pipeline
+Brief introduction of all the GCP services used in the solution
+
+### Step by Step instructions of building the CI/CD piepline
+
+Step 1 - Clone this repo
+Step 2 -
+.
+.
+.
+.
+Step n - Done
+
+### Step by Step instructions of testing and validation of the CI/CD piepline
+
+In order to test and validate the pipeline, perform the following steps - 
+
+Step 1 - Kickoff the build process by pushing a code change to the github repo
+Step 2 - Monitor the Cloud Build and check the build logs
+.
+.
+.
+.
+Step n - Done
+
+## Conclusion, Next Steps/Further Reading:
+
+Conclude with what we accomplished.
+Refer to some other related avaialble GCP services which can be sued to enhance the pipeline and add more capabilities
+
+
+
+
+
+
+# dev-sec-ops-demo - This is Github page content
 A demonstration of how to create a secure CI/CD pipeline on GCP
+
+
+## Introduction:
+
+
+DevSecOps is a practice to ensure that the software is delivered in continious and secure manner. DevSecOps is a combination if many things in itself, which includes multiple factors including process and people changes in your organization, however, in this blog post we will be just focsing on the technology aspect and show how you can create secure Continious Integration and Continious Deployment pipelines using Google Cloud's native services. More specifically, we will demonstrate how to build and deploy cotainer images on GKE clusters automatically using Gogle Cloud Build and Cloud Deploy, while securing your images and deployments using Google cloud Binary authorization and scanning your container images for vernabilities. This is important to note that this blog post uses Google cloud's native services to achive this, however, its entirely possible to use many open source and third party products for various stages of this secure software delivery piepline. Also, the entire setup is not dependent upon the specific programming language for the application and choice of porgramming language is completely independent. In other words, you can choose to run any container image which you are capable of developing in your local enviornment.
+
+
+### Services and Development enviornment used:
+
+We are going to use the following development enviornment and Google cloud services :
+
+Local nodejs development using VS Code
+Google Cloud Artifacts Registry
+Google Cloud Build
+Google Binary Authorization and Vernability Scanning
+Google Cloud Deploy
+Google Kubernetes Engine (GKE)
+Google pub/sub
+Google Cloud Functions
+
+We will also be Sendgrid APIs to send email as part of the approval process during the CI/CD pipeline.
 
 ## To test out the code:
 
 #### Step 1 :
 
-Clone this repo
+Setup gcloud cli on your local development enviornment. See details [here.](https://cloud.google.com/sdk/docs/install)
+
+#### Step 1 :
+
+Within the workspace, Clone this repo 
+
+```
+git clone https://github.com/sysdesign-code/dev-sec-ops-demo.git
+
+```
+
+Note - git client should be installed and setup on your local development enviornment. See instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) 
 
 #### Step 2 :
 
