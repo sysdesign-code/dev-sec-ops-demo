@@ -2,48 +2,46 @@
 # Building secure software delivery pipeline on Google Cloud - This is the content for the blog post
 
 
-A very brief introduction text about the DevOps and DevSecOps concept. 
-Introduction to secure CI/CD pipeline.
-Introduction to what this blog post is going to be about.
+- A very brief introduction text about the DevOps and DevSecOps concept. 
+- Introduction to secure CI/CD pipeline.
+- Introduction to what this blog post is going to be about.
 
 Outline -
 
-The need of a secure software delivery pipeline (why)
-Google cloud native services used in the solution (What)
-How are we going to accomplish this goal by putthing these services togather (How)
+- The need of a secure software delivery pipeline (why)
+- Google cloud native services used in the solution (What)
+- How are we going to accomplish this goal by putthing these services togather (How)
 
 
 ### Solution Details - Design diagram of the complete flow:
 
-Diagram of the secure CI/CD pipeline
-Brief introduction of all the GCP services used in the solution
+- Diagram of the secure CI/CD pipeline
+- Brief introduction of all the GCP services used in the solution
 
 ### Step by Step instructions of building the CI/CD piepline
 
-Step 1 - Clone this repo
-Step 2 -
-.
-.
-.
-.
-Step n - Done
+- Step 1 - Clone this repo
+- Step 2 -
+- .
+- .
+- .
+- Step n - Done
 
 ### Step by Step instructions of testing and validation of the CI/CD piepline
 
 In order to test and validate the pipeline, perform the following steps - 
 
-Step 1 - Kickoff the build process by pushing a code change to the github repo
-Step 2 - Monitor the Cloud Build and check the build logs
-.
-.
-.
-.
-Step n - Done
+- Step 1 - Kickoff the build process by pushing a code change to the github repo
+- Step 2 - Monitor the Cloud Build and check the build logs
+- .
+- .
+- .
+- Step n - Done
 
 ## Conclusion, Next Steps/Further Reading:
 
-Conclude with what we accomplished.
-Refer to some other related avaialble GCP services which can be sued to enhance the pipeline and add more capabilities
+- Conclude with what we accomplished.
+- Refer to some other related avaialble GCP services which can be sued to enhance the pipeline and add more capabilities
 
 
 
