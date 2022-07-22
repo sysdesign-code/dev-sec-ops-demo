@@ -13,6 +13,20 @@ Outline -
 - How are we going to accomplish this goal by putthing these services togather (How)
 
 
+
+We are going to use the following development enviornment and Google cloud services :
+
+- Local nodejs development using VS Code
+- Google Cloud Artifacts Registry
+- Google Cloud Build
+- Google Binary Authorization and Vernability Scanning
+- Google Cloud Deploy
+- Google Kubernetes Engine (GKE)
+- Google pub/sub
+- Google Cloud Functions
+- **todo** Logging and Monitoring of the pipeline, Alert email from Audit logs via the Cloud Function for Vernability scanning/BinAuth check failure
+
+
 ### Solution Details - Design diagram of the complete flow:
 
 - Diagram of the secure CI/CD pipeline
@@ -48,7 +62,7 @@ In order to test and validate the pipeline, perform the following steps -
 
 
 
-# dev-sec-ops-demo - This is Github page content
+# Github page content
 A demonstration of how to create a secure CI/CD pipeline on GCP
 
 
@@ -60,16 +74,7 @@ DevSecOps is a practice to ensure that the software is delivered in continious a
 
 ### Services and Development enviornment used:
 
-We are going to use the following development enviornment and Google cloud services :
 
-Local nodejs development using VS Code
-Google Cloud Artifacts Registry
-Google Cloud Build
-Google Binary Authorization and Vernability Scanning
-Google Cloud Deploy
-Google Kubernetes Engine (GKE)
-Google pub/sub
-Google Cloud Functions
 
 We will also be Sendgrid APIs to send email as part of the approval process during the CI/CD pipeline.
 
