@@ -5,7 +5,7 @@ metadata:
 description: main application pipeline
 serialPipeline:
  stages:
- - targetId: test
+ - targetId: dev
    profiles: []
  - targetId: staging
    profiles: []
@@ -16,12 +16,11 @@ serialPipeline:
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
- name: test
+ name: dev
 description: development cluster
 gke:
- cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/test
+ cluster: projects/anjali-blog-test/locations/us-central1/clusters/dev
 ---
-
 
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -29,7 +28,7 @@ metadata:
  name: staging
 description: staging cluster
 gke:
- cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/staging
+ cluster: projects/anjali-blog-test/locations/us-central1/clusters/staging
 ---
 
 apiVersion: deploy.cloud.google.com/v1
@@ -39,4 +38,4 @@ metadata:
 description: production cluster
 requireApproval: true
 gke:
- cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/prod
+ cluster: projects/anjali-blog-test/locations/us-central1/clusters/prod
