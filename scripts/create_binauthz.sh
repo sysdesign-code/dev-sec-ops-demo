@@ -6,6 +6,17 @@
 
 #List of all variables used in the script
 
+#Enable the following GCP APIs
+#Cloud Build, Binary Authorization, On-Demand Scanning, Resource Manager API, Artifact Registry API, Artifact Registry Vulnerability Scanning, Cloud Deploy API, and KMS API
+gcloud services enable cloudbuild.googleapis.com
+gcloud services enable binaryauthorization.googleapis.com
+gcloud services enable ondemandscanning.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com
+gcloud services enable artifactregistry.googleapis.com
+gcloud services enable containerscanning.googleapis.com
+gcloud services enable clouddeploy.googleapis.com
+gcloud services enable cloudkms.googleapis.com
+
 #GCP Project Logistics
 LOCATION=us-central1
 PROJECT_ID=$(gcloud config list --format 'value(core.project)')
@@ -13,14 +24,40 @@ PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format='value(projec
 CLOUD_BUILD_SA_EMAIL="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
 BINAUTHZ_SA_EMAIL="service-${PROJECT_NUMBER}@gcp-sa-binaryauthorization.iam.gserviceaccount.com"
 
+#Create the following custom IAM role
+gcloud iam roles create cicdblogrole --project=${PROJECT_ID} \
+    --title="cicdblogrole" \
+    --description="Custom Role for GCP CICD Blog" \
+    --permissions="artifactregistry.repositories.create,binaryauthorization.attestors.get,binaryauthorization.attestors.list,binaryauthorization.policy.update,clouddeploy.deliveryPipelines.get,clouddeploy.releases.get,cloudkms.cryptoKeyVersions.useToSign,cloudkms.cryptoKeyVersions.viewPublicKey,containeranalysis.notes.attachOccurrence,containeranalysis.notes.create,containeranalysis.notes.listOccurrences,containeranalysis.notes.setIamPolicy,iam.serviceAccounts.actAs,ondemandscanning.operations.get,ondemandscanning.scans.analyzePackages,ondemandscanning.scans.listVulnerabilities,serviceusage.services.enable,storage.objects.get" \
+    --stage=Beta
+
+#Add the newly created custom role, and "Cloud Deploy Admin" to the Cloud Build Service Account
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role="projects/${PROJECT_ID}/roles/cicdblogrole"
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role='roles/clouddeploy.admin'
+
+#Add the following: "Artifact Registry Reader", "Cloud Deploy Runner" and "Kubernetes Engine Admin" IAM Role to the Compute Engine Service Account
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/artifactregistry.reader'
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/clouddeploy.jobRunner'
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/container.admin'
+
+
 #Binary Authorization Attestor
 ATTESTOR_ID=cb-attestor
 NOTE_ID=cb-attestor-note
 
-#KMS Key Details
+#KMS Details
 KEY_LOCATION=global
 KEYRING=blog-keyring
-KEY_NAME=cd-blog-two
+KEY_NAME=cd-blog
 KEY_VERSION=1
 
 #Apply the new binary authorization policy
@@ -36,7 +73,7 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?
       "name": "projects/${PROJECT_ID}/notes/${NOTE-ID}",
       "attestation": {
         "hint": {
-          "human_readable_name": "Attestor Note is Created, Requires an attestor"
+          "human_readable_name": "Attestor Note is Created, Requires the creation of an attestor"
         }
       }
     }
@@ -71,7 +108,8 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/$
         ]
       }
     } 
-EOF \ "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/${NOTE_ID}:setIamPolicy"
+EOF
+#EOF \ "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/${NOTE_ID}:setIamPolicy"
 
 #Enable Cloud KMS API
 #gcloud services enable --project "${PROJECT_ID}" cloudkms.googleapis.com

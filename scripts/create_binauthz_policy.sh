@@ -2,12 +2,12 @@
 LOCATION=us-central1
 PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 ATTESTOR_ID=cb-attestor
-GKE_Dev_Cluster_Name=dev
+GKE_Test_Cluster_Name=test
 GKE_Staging_Cluster_Name=staging
 GKE_Prod_Cluster_Name=prod
 
 #GKE variables for the 3 clusters where docker image will be deployed through Cloud Deploy pipeline
-GKE_BA_Policy_Dev=$LOCATION.$GKE_Dev_Cluster_Name
+GKE_BA_Policy_Test=$LOCATION.$GKE_Test_Cluster_Name
 GKE_BA_Policy_Staging=$LOCATION.$GKE_Staging_Cluster_Name
 GKE_BA_Policy_Prod=$LOCATION.$GKE_Prod_Cluster_Name
 
@@ -23,11 +23,10 @@ echo $CONTAINER_IMAGE_DIGEST_PATH
 #KMS Key Details
 KEY_LOCATION=global
 KEYRING=blog-keyring
-KEY_NAME=cd-blog-two
+KEY_NAME=cd-blog
 KEY_VERSION=1
 
 #To ensure everything worked as expected, you can list your attestations and the key that's assigned to that attestor for verification
-
 #Print the list of attestors, you should now see a key registered:
 
 gcloud container binauthz attestors list
@@ -63,7 +62,7 @@ curl "https://binaryauthorization.googleapis.com/v1/projects/${PROJECT_ID}/polic
           "evaluationMode": "ALWAYS_DENY"
       },
       "clusterAdmissionRules": {
-          "${GKE_BA_Policy_Dev}": {
+          "${GKE_BA_Policy_Test}": {
             "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
             "evaluationMode": "REQUIRE_ATTESTATION",
             "requireAttestationsBy": [
