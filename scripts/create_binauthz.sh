@@ -50,7 +50,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/container.admin'
 
 
-#Binary Authorization Attestor
+#Binary Authorization Attestor variables
 ATTESTOR_ID=cb-attestor
 NOTE_ID=cb-attestor-note
 
