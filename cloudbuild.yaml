@@ -5,8 +5,8 @@ steps:
      args:
      - -c
      - |
-       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/cd:$REVISION_ID -f ./Dockerfile . &&
-       docker image inspect us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/cd:$REVISION_ID --format \
+       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID -f ./Dockerfile . &&
+       docker image inspect us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format \
        '{{index .RepoTags 0}}@{{.Id}}' > /workspace/image-digest.txt &&
        cat image-digest.txt
    - id: Scan The Image
@@ -15,7 +15,7 @@ steps:
      args:
      - -c
      - |
-       gcloud artifacts docker images scan us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/cd:$REVISION_ID \
+       gcloud artifacts docker images scan us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID \
        --format='value(response.scan)' > /workspace/scan_id.txt
    - id: Check For CRITICAL Vulnerabilities for the Image
      name: gcr.io/cloud-builders/gcloud
@@ -25,14 +25,14 @@ steps:
      - |
        gcloud artifacts docker images list-vulnerabilities $(cat /workspace/scan_id.txt) \
        --format='value(vulnerability.effectiveSeverity)' | if grep -Fxq $_SEVERITY; \
-       then echo 'Vulnerability check failed for docker image "$_REPO_NAME/cd:$REVISION_ID", and will not be pushed to Artifact Registry because many "$_SEVERITY" checks are impacting the image and needs to fixed' && exit 1; else exit 0; fi
+       then echo 'Vulnerability check failed for docker image "$_CONTAINER_REPO_NAME/cd:$REVISION_ID", and will not be pushed to Artifact Registry because many "$_SEVERITY" checks are impacting the image and needs to fixed' && exit 1; else exit 0; fi
    - id: Push Image to Artifact Registry
      name: gcr.io/cloud-builders/docker
      entrypoint: /bin/bash
      args:
      - -c
      - |
-       docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/cd:$REVISION_ID
+       docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
    - id: Apply Binary Authorization Custom Policy for Image
      name: 'gcr.io/cloud-builders/gcloud'
      entrypoint: '/bin/sh'
@@ -40,13 +40,13 @@ steps:
       - -c
       - |
         ./scripts/create_binauthz_policy.sh
-   - id: Create a cloud deploy release and this will also deploy the release to the first target ie dev
+   - id: Create a cloud deploy release and this will also deploy the release to the first target ie test
      name: 'gcr.io/cloud-builders/gcloud'
-     args: ['deploy', 'releases', 'create', 'r-$REVISION_ID', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=cd-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/cd:$REVISION_ID']
+     args: ['deploy', 'releases', 'create', 'r-$REVISION_ID', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=cd-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
    - id: Promote/deploy cloud deploy release to next stage ie staging  
      name: 'gcr.io/cloud-builders/gcloud'
      args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=staging']
    - id: Promote/deploy cloud deploy release to next stage ie prod 
      name: 'gcr.io/cloud-builders/gcloud'
      args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=prod']
-images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/cd:$REVISION_ID']
+images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
