@@ -19,7 +19,7 @@ metadata:
  name: test
 description: test cluster
 gke:
- cluster: projects/anjali-blog-test/locations/us-central1/clusters/test
+ cluster: projects/gcp-blog-test-01/locations/us-central1/clusters/test
 ---
 
 apiVersion: deploy.cloud.google.com/v1
@@ -28,7 +28,7 @@ metadata:
  name: staging
 description: staging cluster
 gke:
- cluster: projects/anjali-blog-test/locations/us-central1/clusters/staging
+ cluster: projects/gcp-blog-test-01/locations/us-central1/clusters/staging
 ---
 
 apiVersion: deploy.cloud.google.com/v1
@@ -38,4 +38,4 @@ metadata:
 description: production cluster
 requireApproval: true
 gke:
- cluster: projects/anjali-blog-test/locations/us-central1/clusters/prod
+ cluster: projects/gcp-blog-test-01/locations/us-central1/clusters/prod
