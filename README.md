@@ -17,9 +17,9 @@ Outline -
 We are going to use the following development enviornment and Google cloud services :
 
 - Local nodejs development using VS Code
-- Google Cloud Artifacts Registry
+- Google Cloud Artifacts Registry with Vulnerability Scanning
 - Google Cloud Build
-- Google Binary Authorization and Vernability Scanning
+- Google Binary Authorization 
 - Google Cloud Deploy
 - Google Kubernetes Engine (GKE)
 - Google pub/sub
@@ -35,8 +35,8 @@ We are going to use the following development enviornment and Google cloud servi
 ### Step by Step instructions of building the CI/CD piepline
 
 - Step 1 - Clone this repo
-- Step 2 -
-- .
+- Step 2 - Execute this ONE time script under scripts/create_binauthz.sh to: enable all the required GCP APIs, define environment variables for CICD pipeline within GCP, create the necessary IAM roles and permissions for Cloud Build and Cloud Deploy, Create binary authorization attestation and its necessary IAM, KMS keys and creating the artifact registry repository that will store the Docker Image.
+- Step 3 - 
 - .
 - .
 - Step n - Done
