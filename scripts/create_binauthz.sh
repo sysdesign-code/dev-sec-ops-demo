@@ -16,6 +16,7 @@ gcloud services enable artifactregistry.googleapis.com
 gcloud services enable containerscanning.googleapis.com
 gcloud services enable clouddeploy.googleapis.com
 gcloud services enable cloudkms.googleapis.com
+gcloud services enable cloudfunctions.googleapis.com
 
 #GCP Project Logistics
 LOCATION=us-central1
@@ -28,7 +29,7 @@ BINAUTHZ_SA_EMAIL="service-${PROJECT_NUMBER}@gcp-sa-binaryauthorization.iam.gser
 gcloud iam roles create cicdblogrole --project=${PROJECT_ID} \
     --title="cicdblogrole" \
     --description="Custom Role for GCP CICD Blog" \
-    --permissions="artifactregistry.repositories.create,binaryauthorization.attestors.get,binaryauthorization.attestors.list,binaryauthorization.policy.update,clouddeploy.deliveryPipelines.get,clouddeploy.releases.get,cloudkms.cryptoKeyVersions.useToSign,cloudkms.cryptoKeyVersions.viewPublicKey,containeranalysis.notes.attachOccurrence,containeranalysis.notes.create,containeranalysis.notes.listOccurrences,containeranalysis.notes.setIamPolicy,iam.serviceAccounts.actAs,ondemandscanning.operations.get,ondemandscanning.scans.analyzePackages,ondemandscanning.scans.listVulnerabilities,serviceusage.services.enable,storage.objects.get" \
+    --permissions="artifactregistry.repositories.create,container.clusters.get,binaryauthorization.attestors.get,binaryauthorization.attestors.list,binaryauthorization.policy.update,clouddeploy.deliveryPipelines.get,clouddeploy.releases.get,cloudkms.cryptoKeyVersions.useToSign,cloudkms.cryptoKeyVersions.viewPublicKey,containeranalysis.notes.attachOccurrence,containeranalysis.notes.create,containeranalysis.notes.listOccurrences,containeranalysis.notes.setIamPolicy,iam.serviceAccounts.actAs,ondemandscanning.operations.get,ondemandscanning.scans.analyzePackages,ondemandscanning.scans.listVulnerabilities,serviceusage.services.enable,storage.objects.get" \
     --stage=Beta
 
 #Add the newly created custom role, and "Cloud Deploy Admin" to the Cloud Build Service Account
