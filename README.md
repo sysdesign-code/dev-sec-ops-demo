@@ -1,5 +1,5 @@
 
-# Building secure software delivery pipeline on Google Cloud - This is the content for the blog post
+# Building secure software delivery pipeline on Google Cloud - This is the content for the blog post.
 
 
 - A very brief introduction text about the DevOps and DevSecOps concept. 
