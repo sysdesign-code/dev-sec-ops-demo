@@ -8,7 +8,8 @@
     openssh-server && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
- RUN apt install dpkg yarn
+ RUN apt install dpkg
+ RUN npm install --global yarn
  WORKDIR /app
  COPY . .
  COPY packages /packages
