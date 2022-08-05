@@ -2,7 +2,7 @@
  #FROM node:12-alpine
  FROM ubuntu:xenial
  #RUN apk add --no-cache python3 g++ make dpkg
- RUN apt install python3 g++ make dpkg
+ RUN apt install python3.8 g++ make dpkg
  WORKDIR /app
  COPY . .
  COPY packages /packages
