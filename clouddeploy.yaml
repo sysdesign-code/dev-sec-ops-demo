@@ -1,0 +1,42 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+ name: ci-cd-test
+description: main application pipeline
+serialPipeline:
+ stages:
+ - targetId: test
+   profiles: []
+ - targetId: staging
+   profiles: []
+ - targetId: prod
+   profiles: []
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: test
+description: development cluster
+gke:
+ cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/test
+---
+
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: staging
+description: staging cluster
+gke:
+ cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/staging
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: prod
+description: production cluster
+requireApproval: true
+gke:
+ cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/prod
