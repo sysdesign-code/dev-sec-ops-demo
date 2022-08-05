@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
- FROM node:12-alpine
- RUN apk add --no-cache python3 g++ make dpkg
+ #FROM node:12-alpine
+ FROM ubuntu:xenial
+ #RUN apk add --no-cache python3 g++ make dpkg
+ RUN apt-get add --no-cache python3 g++ make dpkg
  WORKDIR /app
  COPY . .
  COPY packages /packages
