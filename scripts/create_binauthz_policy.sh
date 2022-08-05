@@ -59,7 +59,7 @@ curl "https://binaryauthorization.googleapis.com/v1/projects/${PROJECT_ID}/polic
       },
       "defaultAdmissionRule": {
           "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
-          "evaluationMode": "ALWAYS_DENY"
+          "evaluationMode": "REQUIRE_ATTESTATION"
       },
       "clusterAdmissionRules": {
           "${GKE_BA_Policy_Test}": {
