@@ -34,9 +34,9 @@ steps:
      - |
        docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
 
-  - id: Change permissions on create_binauthz_policy.sh
-    name: gcr.io/cloud-builders/docker
-    args: ['chmod', '+x', 'scripts/create_binauthz_policy.sh']
+   - id: Change permissions on create_binauthz_policy.sh
+     name: gcr.io/cloud-builders/docker
+     args: ['chmod', '+x', 'scripts/create_binauthz_policy.sh']
 
    - id: Apply Binary Authorization Custom Policy for Image
      name: 'gcr.io/cloud-builders/gcloud'
