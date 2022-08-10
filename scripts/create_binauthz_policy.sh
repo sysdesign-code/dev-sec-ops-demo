@@ -55,7 +55,7 @@ curl "https://binaryauthorization.googleapis.com/v1/projects/${PROJECT_ID}/polic
     {
       "globalPolicyEvaluationMode": "ENABLE",
       "admissionWhitelistPatterns": { 
-          "namePattern": "us-central1-docker.pkg.dev/${PROJECT_ID}/test-repo/cd*"
+          "namePattern": "us-central1-docker.pkg.dev/${PROJECT_ID}/test-repo/cd:${REVISION_ID}"
       },
       "defaultAdmissionRule": {
           "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
