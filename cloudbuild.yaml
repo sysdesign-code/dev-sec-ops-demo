@@ -17,7 +17,7 @@ steps:
      - |
        gcloud artifacts docker images scan us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID \
        --format='value(response.scan)' > /workspace/scan_id.txt
-   - id: Check For $_SEVERITY Vulnerabilities for the Image
+   - id: Check For Vulnerabilities within the Image
      name: gcr.io/cloud-builders/gcloud
      entrypoint: /bin/bash
      args:
@@ -25,7 +25,7 @@ steps:
      - |
        gcloud artifacts docker images list-vulnerabilities $(cat /workspace/scan_id.txt) \
        --format='value(vulnerability.effectiveSeverity)' | if grep -Fxq $_SEVERITY; \
-       then echo 'Vulnerability check failed for docker image "$_CONTAINER_REPO_NAME/cd:$REVISION_ID", and will not be pushed to Artifact Registry because "$_SEVERITY" checks are impacting the image and needs to fixed' && exit 1; else exit 0; fi
+       then echo 'Vulnerability check failed for docker image "$_CONTAINER_REPO_NAME/cd:$REVISION_ID", and will not be pushed to Artifact Registry because there are quite a few "$_SEVERITY" checks that are impacting the image and needs to fixed' && exit 1; else exit 0; fi
    - id: Push Image to Artifact Registry
      name: gcr.io/cloud-builders/docker
      entrypoint: /bin/bash
