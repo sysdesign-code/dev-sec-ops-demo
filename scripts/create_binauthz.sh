@@ -138,3 +138,15 @@ gcloud container binauthz attestors list
 
 #Create Artifact Registry Repository where images will be stored
 #gcloud artifacts repositories create test-repo --repository-format=Docker --location=us-central1 --description="Artifact Registry for GCP CICD Blog" --async
+
+#Create Pub/Sub topic for approval notification
+gcloud pubsub topics create clouddeploy-approvals
+
+#Create Cloud Function for approval notification to deploy any worloads to productions
+gcloud functions deploy my-blog-function \
+  --region=us-central1 \
+  --runtime=nodejs16 \
+  --source=./cloud-function \
+  --entry-point=cloudDeployApproval \
+  --trigger-topic=clouddeploy-approvals \
+  --env-vars-file env.yaml
