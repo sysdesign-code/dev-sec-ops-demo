@@ -54,7 +54,6 @@ curl "https://binaryauthorization.googleapis.com/v1/projects/${PROJECT_ID}/polic
     --data-binary @- <<EOF 
     {
       "globalPolicyEvaluationMode": "ENABLE",
-      
       "defaultAdmissionRule": {
           "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
           "evaluationMode": "REQUIRE_ATTESTATION",
