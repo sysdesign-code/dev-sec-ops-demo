@@ -43,4 +43,13 @@ steps:
       - -c
       - |
         ./scripts/create_binauthz_policy.sh
+   - id: Create a cloud deploy release and this will also deploy the release to the first target ie test
+     name: 'gcr.io/cloud-builders/gcloud'
+     args: ['deploy', 'releases', 'create', 'r-$REVISION_ID', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
+   - id: Promote/deploy cloud deploy release to next stage ie staging  
+     name: 'gcr.io/cloud-builders/gcloud'
+     args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=staging']
+   - id: Promote/deploy cloud deploy release to next stage ie prod 
+     name: 'gcr.io/cloud-builders/gcloud'
+     args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=prod']
 images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
