@@ -59,4 +59,4 @@ steps:
    - id: Promote/deploy cloud deploy release to next stage ie prod 
      name: 'gcr.io/cloud-builders/gcloud'
      args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=prod']
-images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_IMAGE_DIGEST']
+images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
