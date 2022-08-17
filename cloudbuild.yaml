@@ -9,5 +9,5 @@ steps:
      - "_DIGEST=$(gcloud container images describe ${_CONTAINER_PATH} --format='get(image_summary.digest)')"
      - "_CONTAINER_IMAGE_DIGEST_PATH=${_DIGEST_CONTAINER_PATH}@${_DIGEST}"
      args: 
-     - echo $(_CONTAINER_IMAGE_DIGEST_PATH) | md5sum | awk '{print $1}'
+     - echo "$(_CONTAINER_IMAGE_DIGEST_PATH) | md5sum | awk '{print $1}'"
 #images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_CONTAINER_IMAGE_DIGEST_PATH']
