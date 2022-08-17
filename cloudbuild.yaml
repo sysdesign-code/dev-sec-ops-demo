@@ -5,8 +5,8 @@ steps:
      args:
      - -c
      - |
-       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$COMMIT_SHA -f ./Dockerfile . &&
-       docker image inspect us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$COMMIT_SHA --format \
+       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID -f ./Dockerfile . &&
+       docker image inspect us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format \
        '{{index .RepoTags 0}}@{{.Id}}' > /workspace/image-digest.txt &&
        cat image-digest.txt
    - id: Scan The Image
@@ -15,7 +15,7 @@ steps:
      args:
      - -c
      - |
-       gcloud artifacts docker images scan us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$COMMIT_SHA \
+       gcloud artifacts docker images scan us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID \
        --format='value(response.scan)' > /workspace/scan_id.txt
    - id: Check For Vulnerabilities within the Image
      name: gcr.io/cloud-builders/gcloud
@@ -25,12 +25,22 @@ steps:
      - |
        gcloud artifacts docker images list-vulnerabilities $(cat /workspace/scan_id.txt) \
        --format='value(vulnerability.effectiveSeverity)' | if grep -Fxq $_SEVERITY; \
-       then echo 'Vulnerability check failed for docker image revision ID "$COMMIT_SHA", and will not be pushed to Artifact Registry Repo "$_CONTAINER_REPO_NAME" because there are quite a few "$_SEVERITY" checks that are impacting the image and needs to fixed' && exit 1; else exit 0; fi
+       then echo 'Vulnerability check failed for docker image revision ID "$REVISION_ID", and will not be pushed to Artifact Registry Repo "$_CONTAINER_REPO_NAME" because there are quite a few "$_SEVERITY" checks that are impacting the image and needs to fixed' && exit 1; else exit 0; fi
    - id: Push Image to Artifact Registry
      name: gcr.io/cloud-builders/docker
      entrypoint: /bin/bash
      args:
      - -c
      - |
-       docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$COMMIT_SHA
-images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$COMMIT_SHA']
+       docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
+   - id: Get Image Digest Information
+     name: gcr.io/cloud-builders/docker
+     entrypoint: /bin/bash
+     args:
+     - -c
+     - |
+       CONTAINER_PATH=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
+       DIGEST=$(gcloud container images describe ${CONTAINER_PATH} --format='get(image_summary.digest)')
+       CONTAINER_IMAGE_DIGEST_PATH=${DIGEST_CONTAINER_PATH}@${DIGEST}
+       echo $CONTAINER_IMAGE_DIGEST_PATH
+images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
