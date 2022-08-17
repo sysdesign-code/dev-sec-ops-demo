@@ -10,4 +10,4 @@ steps:
      - "_CONTAINER_IMAGE_DIGEST_PATH=${_DIGEST_CONTAINER_PATH}@${_DIGEST}"
      args: 
      - echo $(_CONTAINER_IMAGE_DIGEST_PATH)
-images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_CONTAINER_IMAGE_DIGEST_PATH']
+#images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_CONTAINER_IMAGE_DIGEST_PATH']
