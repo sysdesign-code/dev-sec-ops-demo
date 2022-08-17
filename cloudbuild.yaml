@@ -7,7 +7,7 @@ steps:
      - "_REVISION_ID=$(gcloud container images list-tags $_DIGEST_CONTAINER_PATH --format='value(tags)' --limit=1)"
      - "_CONTAINER_PATH=$LOCATION-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID"
      - "_DIGEST=$(gcloud container images describe ${_CONTAINER_PATH} --format='get(image_summary.digest)')"
-     - "_CONTAINER_IMAGE_DIGEST_PATH=${_DIGEST_CONTAINER_PATH}@${DIGEST}"
+     - "_CONTAINER_IMAGE_DIGEST_PATH=${_DIGEST_CONTAINER_PATH}@${_DIGEST}"
      args: ['deploy', 'releases', 'create', 'r-$REVISION_ID', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_CONTAINER_IMAGE_DIGEST_PATH']
    - id: Promote/deploy cloud deploy release to next stage ie staging  
      name: 'gcr.io/cloud-builders/gcloud'
