@@ -3,7 +3,6 @@ steps:
      name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
      entrypoint: 'gcloud'
      env:
-     - '_CONTAINER_REPO_NAME=test-repo'
      - "_DIGEST_CONTAINER_PATH=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd"
      - '_REVISION_ID=$(gcloud container images list-tags $_DIGEST_CONTAINER_PATH --format='value(tags)' --limit=1)'
      - '_CONTAINER_PATH=$LOCATION-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID'
