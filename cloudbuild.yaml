@@ -39,5 +39,5 @@ steps:
      args:
      - -c
      - |
-       gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)' > /workspace/digest.txt && cat digest.txt
+       gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)' > /workspace/digest.txt && cat 'digest.txt -> here is the image digest info'
 images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID']
