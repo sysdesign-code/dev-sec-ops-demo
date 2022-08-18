@@ -33,13 +33,13 @@ steps:
      - -c
      - |
        docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
-   - id: Get Image Digest Information
-     name: gcr.io/cloud-builders/gcloud
-     entrypoint: /bin/bash
-     args:
-     - -c
-     - |
-       _IMAGE_DIGEST=$(gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)')
+   #- id: Get Image Digest Information
+   #  name: gcr.io/cloud-builders/gcloud
+   #  entrypoint: /bin/bash
+   #  args:
+   #  - -c
+   #  - |
+   #    _IMAGE_DIGEST=$(gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)')
    - id: Change permissions on create_binauthz_policy.sh
      name: bash
      args: ['chmod', '+x', 'scripts/create_binauthz_policy.sh']
@@ -52,7 +52,7 @@ steps:
         ./scripts/create_binauthz_policy.sh
    - id: Create a cloud deploy release and this will also deploy the release to the first target ie dev
      name: 'gcr.io/cloud-builders/gcloud'
-     args: ['deploy', 'releases', 'create', 'r-$REVISION_ID', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_IMAGE_DIGEST']
+     args: ['deploy', 'releases', 'create', 'r-$REVISION_ID', '_IMAGE_DIGEST=$(gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)')', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_IMAGE_DIGEST']
    - id: Promote/deploy cloud deploy release to next stage ie staging  
      name: 'gcr.io/cloud-builders/gcloud'
      args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=staging']
