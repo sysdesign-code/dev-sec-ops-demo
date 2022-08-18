@@ -53,5 +53,5 @@ steps:
      name: gcr.io/cloud-builders/gcloud
      args: ['deploy', 'releases', 'promote', '--release=r-$REVISION_ID','--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--to-target=prod']
 substitutions:
-   _DIGEST: $(cat /workspace/digest.txt)
+   _DIGEST: "${gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)}"
 images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$_DIGEST']
