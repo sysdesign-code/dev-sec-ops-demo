@@ -43,7 +43,7 @@ steps:
       - -c
       - |
         ./scripts/create_binauthz_policy.sh
- substitutions:
+substitutions:
    _DIGEST: "${gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID --format='get(image_summary.digest)}"
    - id: Create a cloud deploy release and this will also deploy the release to the first target ie dev
      name: gcr.io/cloud-builders/gcloud
