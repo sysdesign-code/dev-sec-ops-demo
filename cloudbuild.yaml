@@ -33,11 +33,12 @@ steps:
        docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
    - id: Capture Image Digest Information
      name: 'gcr.io/cloud-builders/gcloud'
+     entrypoint: /bin/bash
      args:
       - -c
       - |
         gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID \
-        --format='get(image_summary.digest)' > /workspace/digest.txt && echo "The image digest information " $(cat /workspace/digest.txt)
+        --format='get(image_summary.digest)' > /workspace/digest.txt then echo 'here is the image digest $(cat /workspace/digest.txt)'
 #   - id: Change permissions on create_binauthz_policy.sh
 #     name: bash
 #     args: ['chmod', '+x', 'scripts/create_binauthz_policy.sh']
