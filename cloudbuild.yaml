@@ -62,8 +62,7 @@ steps:
      args:
       - -c
       - |
-        gcloud deploy releases create r-$REVISION_ID --project=$PROJECT_ID --region=us-central1 --delivery-pipeline=ci-cd-test \
-        --images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$(cat /workspace/digest.txt)
+        gcloud deploy releases create r-$REVISION_ID --project=$PROJECT_ID --region=us-central1 --delivery-pipeline=ci-cd-test --images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$(cat /workspace/digest.txt)
 #     args: ['-c', 'deploy', 'releases', 'create', 'r-$REVISION_ID', '--project=$PROJECT_ID','--region=us-central1','--delivery-pipeline=ci-cd-test', '--images=notes-app-image=us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd@$(cat /workspace/digest.txt)']
    - id: Promote/deploy cloud deploy release to next stage ie staging  
      name: gcr.io/cloud-builders/gcloud
