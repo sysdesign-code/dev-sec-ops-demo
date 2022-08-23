@@ -40,7 +40,7 @@ steps:
         gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID \
         --format='get(image_summary.digest)' > /workspace/digest.txt
    - id: "Read Values"
-     name: ubuntu
+     name: 'gcr.io/cloud-builders/gcloud'
      entrypoint: bash
      args:
       - -c
