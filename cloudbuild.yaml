@@ -45,8 +45,8 @@ steps:
      args:
       - -c
       - |
-        $_DIGEST=$(cat /workspace/digest.txt)
-        echo "Here is the image digest:" $_DIGEST
+        _DIGEST >> $(cat /workspace/digest.txt)
+        echo "Here is the image digest:" _DIGEST
 #   - id: Change permissions on create_binauthz_policy.sh
 #     name: bash
 #     args: ['chmod', '+x', 'scripts/create_binauthz_policy.sh']
