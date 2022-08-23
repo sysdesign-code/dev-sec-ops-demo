@@ -38,7 +38,7 @@ steps:
       - -c
       - |
         gcloud container images describe us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID \
-        --format='get(image_summary.digest)' > /workspace/digest.txt \ 
+        --format='get(image_summary.digest)' > /workspace/digest.txt
 #        _DIGEST >> $(cat /workspace/digest.txt)
         args: ['echo', 'here is the digest info: $(cat /workspace/digest.txt)']
 #   - id: Change permissions on create_binauthz_policy.sh
