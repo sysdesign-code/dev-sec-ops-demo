@@ -47,7 +47,7 @@ In order to test and validate the pipeline, perform the following steps -
 
 - Step 1 - Kickoff the build process by pushing a code change to the github repo
 - Step 2 - Monitor the Cloud Build and check the build logs to ensure deployment is successful to test and staging
-- .
+- Step 3
 - .
 - .
 - Step n - Done
