@@ -12,6 +12,7 @@
 - The need of a secure software delivery pipeline (why)
 - Google cloud native services used in the solution (What)
 - How are we going to accomplish this goal by putthing these services togather (How)
+- Google's SRE best practices <link>
 
 
 
