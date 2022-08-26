@@ -17,4 +17,4 @@ spec:
         image: notes-app-image
         env:
         - name: "PORT"
-          value: "80"
+          value: "3000"

@@ -5,7 +5,7 @@ steps:
      args:
      - -c
      - |
-       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID -f ./Dockerfile_vulnerable . &&
+       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID -f ./Dockerfile . &&
        docker image inspect us-central1-docker.pkg.dev/$PROJECT_ID/$_CONTAINER_REPO_NAME/cd:$REVISION_ID
    - id: Scan The Image
      name: 'gcr.io/cloud-builders/gcloud'
