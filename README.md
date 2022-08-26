@@ -37,8 +37,8 @@ We are going to use the following development enviornment and Google cloud servi
 - Step 1 - Clone this repo
 - Step 2 - Execute this ONE time script under scripts/create_binauthz.sh to: enable all the required GCP APIs, define environment variables for CICD pipeline within GCP, create the necessary IAM roles and permissions for Cloud Build and Cloud Deploy, Create binary authorization attestation and its necessary IAM, KMS keys and creating the artifact registry repository that will store the Docker Image.
 - Step 3 - 
-- .
-- .
+- Step 4 - 
+- Step 5 -
 - Step n - Done
 
 ### Step by Step instructions of testing and validation of the CI/CD piepline
@@ -46,8 +46,8 @@ We are going to use the following development enviornment and Google cloud servi
 In order to test and validate the pipeline, perform the following steps - 
 
 - Step 1 - Kickoff the build process by pushing a code change to the github repo
-- Step 2 - Monitor the Cloud Build and check the build logs
-- .
+- Step 2 - Monitor the Cloud Build and check the build logs to ensure deployment is successful to test and staging
+- Step 3
 - .
 - .
 - Step n - Done

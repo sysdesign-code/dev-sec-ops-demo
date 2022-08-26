@@ -7,7 +7,7 @@
 #List of all variables used in the script
 
 #Enable the following GCP APIs
-#Cloud Build, Binary Authorization, On-Demand Scanning, Resource Manager API, Artifact Registry API, Artifact Registry Vulnerability Scanning, Cloud Deploy API, and KMS API
+#Cloud Build, Binary Authorization, On-Demand Scanning, Resource Manager API, Artifact Registry API, Artifact Registry Vulnerability Scanning, Cloud Deploy API, KMS API and Cloud Functions.
 gcloud services enable cloudbuild.googleapis.com
 gcloud services enable binaryauthorization.googleapis.com
 gcloud services enable ondemandscanning.googleapis.com
@@ -50,6 +50,10 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/container.admin'
 
+#Create Default VPC and Default Subnet
+#SUBNET_RANGE=10.128.0.0/20
+#gcloud compute networks create default --subnet-mode=custom --bgp-routing-mode=regional --mtu=1460
+#gcloud compute networks subnets create default --project=$PROJECT_ID --range=$SUBNET_RANGE --network=default --region=$LOCATION
 
 #Binary Authorization Attestor variables
 ATTESTOR_ID=cb-attestor
@@ -110,10 +114,6 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/$
       }
     } 
 EOF
-#EOF \ "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/${NOTE_ID}:setIamPolicy"
-
-#Enable Cloud KMS API
-#gcloud services enable --project "${PROJECT_ID}" cloudkms.googleapis.com
 
 #Before you can use this attestor, your authority needs to create a cryptographic key pair that can be used to sign container images.
 #Create a keyring to hold a set of keys specific for Attestation
@@ -121,10 +121,13 @@ gcloud kms keyrings create "${KEYRING}" --location="${KEY_LOCATION}"
 
 #Create a new asymmetric signing key pair for the attestor
 #Create a key name that will be assigned to the above key ring. 
-gcloud kms keys create "${KEY_NAME}" --keyring="${KEYRING}" --location="${KEY_LOCATION}" --purpose asymmetric-signing --default-algorithm="ec-sign-p256-sha256"
+gcloud kms keys create "${KEY_NAME}" \
+    --keyring="${KEYRING}" \
+    --location="${KEY_LOCATION}" \ 
+    --purpose asymmetric-signing \
+    --default-algorithm="ec-sign-p256-sha256"
 
 #Now, associate the key with your authority through the gcloud binauthz command:
-
 gcloud beta container binauthz attestors public-keys add  \
     --attestor="${ATTESTOR_ID}"  \
     --keyversion-project="${PROJECT_ID}"  \
@@ -137,7 +140,11 @@ gcloud beta container binauthz attestors public-keys add  \
 gcloud container binauthz attestors list
 
 #Create Artifact Registry Repository where images will be stored
-#gcloud artifacts repositories create test-repo --repository-format=Docker --location=us-central1 --description="Artifact Registry for GCP CICD Blog" --async
+gcloud artifacts repositories create test-repo \
+    --repository-format=Docker \
+    --location=us-central1 \
+    --description="Artifact Registry for GCP DevSecOps CICD Blog" \
+    --async
 
 #Create Pub/Sub topic for approval notification
 gcloud pubsub topics create clouddeploy-approvals
@@ -150,3 +157,36 @@ gcloud functions deploy my-blog-function \
   --entry-point=cloudDeployApproval \
   --trigger-topic=clouddeploy-approvals \
   --env-vars-file env.yaml
+  
+#Create three GKE clusters for test, stading and production where the docker images deployment will be created for rolled out across the clusters
+#NOTE: If you're using a different VPC, ensure you change the --subnetwork to match against your VPC subnet
+
+#GKE Cluster for Test environment
+gcloud container clusters create test \
+    --project=$PROJECT_ID \
+    --machine-type=n1-standard-2 \
+    --region $LOCATION \
+    --num-nodes=1 \
+    --enable-binauthz \
+    --labels=app=vulnapp-test \
+    --subnetwork=default
+ 
+#GKE Cluster for Staging environment
+gcloud container clusters create staging \
+    --project=$PROJECT_ID \
+    --machine-type=n1-standard-2 \
+    --region $LOCATION \
+    --num-nodes=1 \
+    --enable-binauthz \
+    --labels=app=vulnapp-staging \
+    --subnetwork=default
+
+#GKE Cluster for Production environment
+gcloud container clusters create dummy \
+    --project=$PROJECT_ID \
+    --machine-type=n1-standard-2 \
+    --region $LOCATION \
+    --num-nodes=1 \
+    --enable-binauthz \
+    --labels=app=vulnapp-prod \
+    --subnetwork=default
