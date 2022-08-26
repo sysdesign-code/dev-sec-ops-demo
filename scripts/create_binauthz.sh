@@ -21,7 +21,6 @@ gcloud services enable cloudfunctions.googleapis.com
 #GCP Project Logistics
 LOCATION=us-central1
 PROJECT_ID=$(gcloud config list --format 'value(core.project)')
-SUBNET_RANGE=10.128.0.0/20
 PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format='value(projectNumber)')
 CLOUD_BUILD_SA_EMAIL="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
 BINAUTHZ_SA_EMAIL="service-${PROJECT_NUMBER}@gcp-sa-binaryauthorization.iam.gserviceaccount.com"
@@ -52,8 +51,9 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/container.admin'
 
 #Create Default VPC and Default Subnet
+#SUBNET_RANGE=10.128.0.0/20
 #gcloud compute networks create default --subnet-mode=custom --bgp-routing-mode=regional --mtu=1460
-#gcloud compute networks subnets create default-subnet --project=$PROJECT_ID --range=$SUBNET_RANGE --network=default --region=$LOCATION
+#gcloud compute networks subnets create default --project=$PROJECT_ID --range=$SUBNET_RANGE --network=default --region=$LOCATION
 
 #Binary Authorization Attestor variables
 ATTESTOR_ID=cb-attestor
@@ -169,7 +169,7 @@ gcloud container clusters create test \
     --num-nodes=1 \
     --enable-binauthz \
     --labels=app=vulnapp-test \
-    --subnetwork=default-subnet
+    --subnetwork=default
  
 #GKE Cluster for Staging environment
 gcloud container clusters create staging \
@@ -179,14 +179,14 @@ gcloud container clusters create staging \
     --num-nodes=1 \
     --enable-binauthz \
     --labels=app=vulnapp-staging \
-    --subnetwork=default-subnet
+    --subnetwork=default
 
 #GKE Cluster for Production environment
-gcloud container clusters create prod \
+gcloud container clusters create dummy \
     --project=$PROJECT_ID \
     --machine-type=n1-standard-2 \
     --region $LOCATION \
     --num-nodes=1 \
     --enable-binauthz \
     --labels=app=vulnapp-prod \
-    --subnetwork=default-subnet
+    --subnetwork=default
