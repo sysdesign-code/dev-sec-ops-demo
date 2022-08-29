@@ -1,5 +1,5 @@
 
-# Building secure software delivery pipeline on Google Cloud - This is the content for the blog post.... 
+# Building a secure DevSecOps CICD delivery pipeline using Google Cloud  
 
 ## Anjali/Nitin, lets do this at the end: Introduction 
 
@@ -18,13 +18,13 @@
 
 ## NITIN: We are going to use the following development enviornment and Google cloud services - Nitin
 
-- Local nodejs development using VS Code
+- Local Node.js docker based application that's using VS Code
 - Google Cloud Artifacts Registry with Vulnerability Scanning
 - Google Cloud Build
 - Google Binary Authorization 
 - Google Cloud Deploy
 - Google Kubernetes Engine (GKE)
-- Google pub/sub
+- Google Pub/Sub
 - Google Cloud Functions
 - **todo** Logging and Monitoring of the pipeline, Alert email from Audit logs via the Cloud Function for Vernability scanning/BinAuth check failure
 
@@ -34,16 +34,60 @@
 - Diagram of the secure CI/CD pipeline, create architecture diagram
 - Brief introduction of all the GCP services used in the solution
 
-## ANJALI: High Level Step by Step instructions of building the CI/CD piepline:
+## ANJALI: Step-by-Step instructions of building the CI/CD piepline:
 
-- Step 1 - Clone this repo
-- Step 2 - Execute this ONE time script under scripts/create_binauthz.sh to: enable all the required GCP APIs, define environment variables for CICD pipeline within GCP, create the necessary IAM roles and permissions for Cloud Build and Cloud Deploy, Create binary authorization attestation and its necessary IAM, KMS keys and creating the artifact registry repository that will store the Docker Image.
-- Step 3 - 
-- Step 4 - 
-- Step 5 -
-- Step n - Done
+### GCP Environment Setup
+
+#### Pre-Requisities
+
+These steps are required to setup and prepare your GCP environment. We highly recommend you create a new GCP Project as you're going to be running multiple cloud services within region "us-central1". 
+
+1. Clone the following GitHub Repo: `https://github.com/sysdesign-code/dev-sec-ops-demo 
+2. Create a new GCP Project, follow the steps here around how to provision and create one: https://cloud.google.com/resource-manager/docs/creating-managing-projects
+3. Once your new project is created, enable Cloud SDK to allow CLI access for `gcloud`. Follow the steps here: https://cloud.google.com/sdk/docs/install
+4. Once you've enabled CLI access, either through your Cloud Shell or local workstation, set your project ID:
+
+    ```
+    gcloud config set project YOUR_PROJECT_ID
+    ```
+
+#### Run the following one-time script 
+
+This one time script creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CICD pipeline. Here's all the service deployments that will occur once the script finishes:
+
+1. Enables all the required cloud service APIs such as: Cloud Build, Binary Authorization, Kubernertes Service, Artiface Registry, Cloud Deploy and many more.
+2. Create three (3) GKE clusters for test, staging and production to show image roll-out deployments, across these clusters, using Cloud Deploy.
+2. Bind all the necessary IAM roles and permissions for Cloud Build and Cloud Deploy.
+3. Create Binary Authorization attestor, associated container note, cryptographic KMS key and all the associated IAM role and permissions to allow container note access for the attestor.
+4. Create the artifact registry repository where the docker image will be stored.
+5. Finally, Create a pub/sub topic and cloud function which will create email approvals for any Kubernetes deployment to the prod cluster.
+
+To execute this script, run the following command:
+
+    ```
+    sh /scripts/gcp_env_setup.sh
+    ```
+
+This script will approximately take 20-22 minutes to complete. Once finished, the output should look similar to something like [this](/scripts/gcp_env_setup_OUTPUT.txt).
+
+### Configure Cloud Build access for GitHub
+
+### Configure and create Cloud Deploy Pipeline
+
+### Setup and Enable Email Approval for GKE Production Cluster Deployment
 
 ## ANJALI: Step by Step instructions of testing and validation of the CI/CD piepline
+
+### Run Cloud Build Configuration File for "Happy" Docker Path
+
+### Run Cloud Build Configuration File for "Vulnerable" Docker Path
+1) Ensure your GitHub Repo is connected as a repository in Cloud Build.
+2) Edit the existing Trigger and update the Cloud Build configuration file location to be: "cloudbuild-vulnerable.yaml"
+3) Update the "_SEVERITY" environment variable to be "HIGH" instead of "CRITICAL". Notes: This env variable value is case-sensitive, they should be all caps.
+4) Make an update to one of the repo files and this will automatically kick start the cloud build process. The build will fail in "Step 2: Check For Vulnerabilities within the Image" because this image contains HIGH vunerabilities and cloud build will NOT push the image to be stored in artifact registry.
+5) Go back to the Trigger for this cloud build and revert the "_SEVERITY" environment variable to be "CRITICAL".
+6) Re-run the build and validate the GKE release deployment via Cloud Build fails in both "test" and "staging" GKE clusters because the new docker_vulnerable image deployment defined by this cloud build is NOT allowed because of binary authorization policy enforcement.
+### Validate Image Deployment for "Happy" and "Vulnerable" paths for GKE
 
 In order to test and validate the pipeline, perform the following steps - 
 
