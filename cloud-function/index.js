@@ -8,27 +8,17 @@
 
     const attributes = message.attributes
     action = attributes.Action;
-    console.log("action: "+action);
   
     if (action == 'Required') {
     const sendgrid = require('@sendgrid/mail');
     sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
     rollout = attributes.Rollout
-    console.log("Rollout: " + rollout);
     var rolloutSplit = rollout.split("/");
     pipeline = rolloutSplit[5];
     var location = attributes.Location;
     var releaseid = attributes.ReleaseID;
     releaseid = rolloutSplit[7];
-    console.log("release id:" + releaseid);
-    var rolloutid = attributes.RolloutID;
-    console.log("rollout id:" + rolloutid);
-    var targetid = attributes.TargetID;
-    console.log("taregt id:" + targetid);
     var projectnbr = attributes.ProjectNumber;
-    console.log("projectnbr:" + projectnbr);
-    var pipelineid = attributes.PipelineID;
-    console.log("PipelineID:" + pipelineid);
   
     var slash = "/";
     var consoleurl = 'https://console.cloud.google.com/deploy/delivery-pipelines';
@@ -41,7 +31,11 @@
       subject: 'Approval Needed: Google Cloud Deploy Build',
       html: 'Hello! A Google Cloud Deploy release needs your attention. To approve or reject the release click <a href=' + deployurl + '>here.</a>',
   }
+  try {
   sendgrid.send(msg);
+  }catch (e) {
+    console.log("Error sending email:"+ e);
+  }
     }
   
   };
