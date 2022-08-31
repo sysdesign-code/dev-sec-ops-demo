@@ -2,7 +2,7 @@
 
 #This script should only be run ONE TIME.
 #It creates binary authorization attestor, associated attestor note, IAM policy assignment for that attestor, the associated keys to the attestor, and a custom binary authorization policy that can be assigned either to a GKE cluster or Kubernetes namespace.
-#Author: Anjali Khatri
+#Author: Anjali Khatri & Nitin Vashishtha
 
 #List of all variables used in the script
 
@@ -40,7 +40,6 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role='roles/clouddeploy.admin'
 
 #Add the following: "Artifact Registry Reader", "Cloud Deploy Runner" and "Kubernetes Engine Admin" IAM Role to the Compute Engine Service Account
-
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/artifactregistry.reader'
 
@@ -50,10 +49,12 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role='roles/container.admin'
 
-#Create Default VPC and Default Subnet
-#SUBNET_RANGE=10.128.0.0/20
-#gcloud compute networks create default --subnet-mode=custom --bgp-routing-mode=regional --mtu=1460
-#gcloud compute networks subnets create default --project=$PROJECT_ID --range=$SUBNET_RANGE --network=default --region=$LOCATION
+#Create a Default VPC and its embedded Subnet. This is under the assumption that the new GCP project did NOT automatically create a default VPC and Subnet.
+#Uncomment the following 3 commands to create a VPC.
+
+SUBNET_RANGE=10.128.0.0/20
+gcloud compute networks create default --subnet-mode=custom --bgp-routing-mode=regional --mtu=1460
+gcloud compute networks subnets create default --project=$PROJECT_ID --range=$SUBNET_RANGE --network=default --region=$LOCATION
 
 #Binary Authorization Attestor variables
 ATTESTOR_ID=cb-attestor
@@ -64,9 +65,6 @@ KEY_LOCATION=global
 KEYRING=blog-keyring
 KEY_NAME=cd-blog
 KEY_VERSION=1
-
-#Apply the new binary authorization policy
-#gcloud container binauthz policy import scripts/require_binauthz_gkecluster_policy.yaml
 
 curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?noteId=${NOTE_ID}" \
   --request "POST" \
@@ -83,8 +81,6 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?
       }
     }
 EOF
-
-#curl -vvv -H "Authorization: Bearer $(gcloud auth print-access-token)" "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/${NOTE_ID}"
 
 #Create attestor and attach to the Container Analysis Note created in the step above
 gcloud container binauthz attestors create $ATTESTOR_ID \
@@ -123,8 +119,7 @@ gcloud kms keyrings create "${KEYRING}" --location="${KEY_LOCATION}"
 #Create a key name that will be assigned to the above key ring. 
 gcloud kms keys create "${KEY_NAME}" \
     --keyring="${KEYRING}" \
-    --location="${KEY_LOCATION}" \ 
-    --purpose asymmetric-signing \
+    --location="${KEY_LOCATION}" --purpose asymmetric-signing \
     --default-algorithm="ec-sign-p256-sha256"
 
 #Now, associate the key with your authority through the gcloud binauthz command:
@@ -158,8 +153,8 @@ gcloud functions deploy my-blog-function \
   --trigger-topic=clouddeploy-approvals \
   --env-vars-file env.yaml
   
-#Create three GKE clusters for test, stading and production where the docker images deployment will be created for rolled out across the clusters
-#NOTE: If you're using a different VPC, ensure you change the --subnetwork to match against your VPC subnet
+#Create three GKE clusters for test, staging and production. The Node.js docker image will be deployed as a release through the Cloud Deploy pipeline first in "dev". Next, the image deployment will be rolled to the "staging" cluster and once its successful, pending approval, the final image roll-out will deploy to the "prod" cluster.
+#NOTE: If you're using a different VPC, ensure you change the --subnetwork config value to match against your VPC subnet
 
 #GKE Cluster for Test environment
 gcloud container clusters create test \
@@ -167,7 +162,7 @@ gcloud container clusters create test \
     --machine-type=n1-standard-2 \
     --region $LOCATION \
     --num-nodes=1 \
-    --enable-binauthz \
+    --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
     --labels=app=vulnapp-test \
     --subnetwork=default
  
@@ -177,16 +172,16 @@ gcloud container clusters create staging \
     --machine-type=n1-standard-2 \
     --region $LOCATION \
     --num-nodes=1 \
-    --enable-binauthz \
+    --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
     --labels=app=vulnapp-staging \
     --subnetwork=default
 
 #GKE Cluster for Production environment
-gcloud container clusters create dummy \
+gcloud container clusters create prod \
     --project=$PROJECT_ID \
     --machine-type=n1-standard-2 \
     --region $LOCATION \
     --num-nodes=1 \
-    --enable-binauthz \
+    --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
     --labels=app=vulnapp-prod \
     --subnetwork=default
