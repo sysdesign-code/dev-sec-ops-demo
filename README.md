@@ -1,19 +1,17 @@
 
 # Building a secure DevSecOps CICD delivery pipeline using Google Cloud  
 
-## Anjali/Nitin, lets do this at the end: Introduction 
-
-- A very brief introduction text about the DevOps and DevSecOps concept. 
+## Introduction  
 
 DevOps is a concept which allows software development teams to release software in an automated and stable way. DevOps itself is not just one thing, its a combinatin of culture and technology, which togather make the actual implementation of DevOps successful. In this blog, we will be focusing on the tools and technology side of DevOps. At the core of the technicla aspect of DevOps concept is Continous Integration and Continous Delivery (CI/CD). The idea behind CI/CD concept is to create an automated software delivery pipeline which continoiusly deploys the new software releases in an automated fashion. The flow begins with the developers commitng the code chnages to a source code repository, which automatically triggers the pipeline by building and dpeloying the code changes into various enviornments starting from non-prod enviornments to production enviornment. 
 
-Also, as we build the CI/CD pipelines for faster and reliable software delivery, the security aspect should not be ignored and must be incorporated into the pipeline right from the beginning. When we build our source code, we typically make use of various open source libraries and container images and its imperetive to have some security safe guards within the CI/CD piepline to ensure that the software we are building and deploying is free from any vulnerability. Additionally, its equally important to have control over what type of code/container image should be allowed to be deployed on your target runtime enviornment. 
+Also, as we build the CI/CD pipelines for faster and reliable software delivery, the security aspect should not be ignored and must be incorporated into the pipeline right from the beginning. When we build our source code, we typically make use of various open source libraries and container images and its imperetive to have some security safe guards within the CI/CD piepline to ensure that the software we are building and deploying is free from any vulnerability. Additionally, its equally important to have control over what type of code/container image should be allowed to be deployed on your target runtime enviornment. Security is everyone's responsibility. [Shifting left](https://cloud.google.com/architecture/devops/devops-tech-shifting-left-on-security) on security is a DevOps practice which allows you to address security concerns early in the software development lifecycle. Vulnerability scaning of the container images and putting security policies in place using binary Authorization to allow only known/trusted images to be dpeloyed on GKE are a couple of ways to implement this policy to make your pipelines more secure. 
 
-What are we building -
+- What are we building -
 
 In this blog post, we will show how to build a secure CI/CD pipeline using Google Cloud's native services. We will create a secure software delivery pipeline which builds a sample Nodjs application as a container image and deploys it on GKE clusters. 
 
-How are we building the pipeline - 
+- How are we building the pipeline - 
 
 We we going to use the following Google Cloud native services to build the pipeline - 
 
@@ -30,7 +28,7 @@ We are are using github as a source code reporsitory and Sendgrid APIs to send e
 
 The CI/CD piepeline is setup in a way that a Cloud Build trigger is configured to sense any code push to a certain reporsitory and branch in the github, it starts the build process.
 
-Below is the flow of how the CI/CD piepeline is setup, without any security polciy enforecement.
+Below is the flow of how the CI/CD piepeline is setup, without any security polciy enforecement -
 
 1. Developer checks in the code to a github repo
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
@@ -131,8 +129,9 @@ In order to test and validate the pipeline, perform the following steps -
 - Conclude with what we accomplished.
 - Refer to some other related avaialble GCP services which can be sued to enhance the pipeline and add more capabilities
 
-Next steps - 
+## Conclusion and Next steps - 
 
+In this blog post, we built a secure CI/CD pipeline using Google Cloud's native services. We saw how we can secure the pipeline using Google Cloud's native services such as Binary Authorization and Vulenerabiloity scaning of the container images. We only saw one way to put some control on which images can be dpeloyed on GKE cluster, but Binary Authorization also offers other 
 Logging and Monitoring of the pipeline, Alert email from Audit logs via the Cloud Function for Vernability scanning/BinAuth check failure
 
 ----------------
