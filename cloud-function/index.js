@@ -16,8 +16,7 @@
     const rolloutSplit = rollout.split("/");
     pipeline = rolloutSplit[5];
     const location = attributes.Location;
-    const releaseid = attributes.ReleaseID;
-    releaseid = rolloutSplit[7];
+    const releaseid = rolloutSplit[7];
     const projectnbr = attributes.ProjectNumber;
   
     const slash = "/";
