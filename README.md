@@ -16,24 +16,24 @@ In this blog post, we will show how to build a secure CI/CD pipeline using Googl
 We we going to use the following Google Cloud native services to build the pipeline - 
 
 
-1. Cloud Build - Cloud Build is a completely serverless CI/CD platform allows you to automate your build, test and deploy tasks.
-2. Artifacts Registry - Artifacts Registry is a service to securely store and manage your build artifacts.
-3. Cloud Deploy - Cloud Deploy is a fully managed Continous Delivery service for GKE and Anthos.
-4. Binary Authorization - Binary Authorization provides deploy time security controls for GKE and Cloud Run deployments.
-5. GKE - GKE is a fully managed Kubernetes platform.
-6. Google Pub/Sub - A serverless messaging platform.
-7. Cloud Functions - A serverless platform to run your code.
+1. [Cloud Build](https://cloud.google.com/build) - Cloud Build is a completely serverless CI/CD platform allows you to automate your build, test and deploy tasks.
+2. [Artifact Registry](https://cloud.google.com/artifact-registry) - Artifact Registry is a service to securely store and manage your build artifacts.
+3. [Cloud Deploy](https://cloud.google.com/deploy) - Cloud Deploy is a fully managed Continous Delivery service for GKE and Anthos.
+4. [Binary Authorization](https://cloud.google.com/binary-authorization) - Binary Authorization provides deploy time security controls for GKE and Cloud Run deployments.
+5. [GKE](https://cloud.google.com/kubernetes-engine) - GKE is a fully managed Kubernetes platform.
+6. [Google Pub/Sub](https://cloud.google.com/pubsub) - A serverless messaging platform.
+7. [Cloud Functions](https://cloud.google.com/functions) - A serverless platform to run your code.
 
 We are are using github as a source code reporsitory and Sendgrid APIs to send email.
 
 The CI/CD piepeline is setup in a way that a Cloud Build trigger is configured to sense any code push to a certain reporsitory and branch in the github, it starts the build process.
 
-Below is the flow of how the CI/CD piepeline is setup, without any security polciy enforecement -
+Below is the flow of how the CI/CD piepeline is setup, without any security policy enforecement -
 
 1. Developer checks in the code to a github repo
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
 3. The container image is stored into Artifacts Registry.
-4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production enviornments. 
+4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy is configured to go through an approval step before deploying the image to the Production GKE cluster. 
 6. Pre-configured email id recieves an email notifying that a Cloud Deploy release requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster
 
@@ -46,13 +46,13 @@ Below is the flow when we try to build and deploy a container image which has vu
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. 
 3. The build process fails with the error message that some critical vulerabilities were found in the image.
 
-Below is the flow when we try to deploy a container image to GKE  which voilates a Binary Authorization policy -
+Below is the flow when we try to deploy a container image to GKE which voilates a Binary Authorization policy -
 
 1. Developer checks in the code to a github repo
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
 3. The container image is stored into Artifacts Registry.
-4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production enviornments. 
-5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is stil triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
+4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
+5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
 
 
 ## ANJALI: Solution Details - Design diagram of the complete flow
@@ -129,10 +129,11 @@ In order to test and validate the pipeline, perform the following steps -
 - Conclude with what we accomplished.
 - Refer to some other related avaialble GCP services which can be sued to enhance the pipeline and add more capabilities
 
-## Conclusion and Next steps - 
+## Conclusion and Further Reading - 
 
-In this blog post, we built a secure CI/CD pipeline using Google Cloud's native services. We saw how we can secure the pipeline using Google Cloud's native services such as Binary Authorization and Vulenerabiloity scaning of the container images. We only saw one way to put some control on which images can be dpeloyed on GKE cluster, but Binary Authorization also offers other 
-Logging and Monitoring of the pipeline, Alert email from Audit logs via the Cloud Function for Vernability scanning/BinAuth check failure
+In this blog post, we built a secure CI/CD pipeline using Google Cloud's native services. We saw how we can secure the pipeline using Google Cloud's native services such as Binary Authorization and Vulenerabiloity scaning of the container images. We only saw one way to put some control on which images can be dpeloyed on GKE cluster, but Binary Authorization also offers [Build Verification](https://cloud.google.com/binary-authorization/docs/overview#attestations) in which Binary Authorization uses attestations to verify that an image was built by a specific build system or continuous integration (CI) pipeline such as Cloud Build. Additionally, Binary Authorization also writes all the events where the deployment of a container image is blocked due to the constraints defined by the security policy, to the audit logs. You can create alerts on these log entries and notify the appropriate team members about the blocked deployment event.
+
+
 
 ----------------
 Flow of the blog below.
