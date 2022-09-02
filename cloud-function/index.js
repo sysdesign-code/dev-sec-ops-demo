@@ -13,15 +13,15 @@
     const sendgrid = require('@sendgrid/mail');
     sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
     rollout = attributes.Rollout
-    var rolloutSplit = rollout.split("/");
+    const rolloutSplit = rollout.split("/");
     pipeline = rolloutSplit[5];
-    var location = attributes.Location;
-    var releaseid = attributes.ReleaseID;
+    const location = attributes.Location;
+    const releaseid = attributes.ReleaseID;
     releaseid = rolloutSplit[7];
-    var projectnbr = attributes.ProjectNumber;
+    const projectnbr = attributes.ProjectNumber;
   
-    var slash = "/";
-    var consoleurl = 'https://console.cloud.google.com/deploy/delivery-pipelines';
+    const slash = "/";
+    const consoleurl = 'https://console.cloud.google.com/deploy/delivery-pipelines';
     var deployurl = consoleurl + slash + location + slash + pipeline + '/releases' + slash + releaseid + slash + 'rollouts?ProjectID=' + projectnbr;
     console.log("Cloud deploy URL :"+ deployurl);
     // you can also insert your test suite/ results link in the email for review/verification 
