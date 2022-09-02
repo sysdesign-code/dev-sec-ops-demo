@@ -32,6 +32,7 @@
   }
   try {
   sendgrid.send(msg);
+  console.log("Email sent successfully");
   }catch (e) {
     console.log("Error sending email:"+ e);
   }
