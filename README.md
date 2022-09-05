@@ -56,6 +56,8 @@ Below is the flow when we try to deploy a container image to GKE which voilates 
 Note - The deployment fails after the timeout value is exceeded set for your pipeline, which is 10 minutes by default, but you can change this value according to your needs, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
 
 
+- Note : The Cloud Functions code provided for the rollout approval email and deployment fialure notification is under the folder cloud-functions in this repo. You will still have to create these cloud functions with this code in your Google Cloud project to recieve email notifications.
+
 ## ANJALI: Solution Details - Design diagram of the complete flow
 
 - Diagram of the secure CI/CD pipeline, create architecture diagram
