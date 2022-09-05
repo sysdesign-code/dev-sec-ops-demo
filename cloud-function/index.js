@@ -27,7 +27,7 @@
     const msg = {
       to: process.env.TO_EMAIL,
       from: process.env.FROM_EMAIL,
-      subject: 'Approval Needed: Google Cloud Deploy Build',
+      subject: 'Approval Needed: Google Cloud Deploy Rollout',
       html: 'Hello! A Google Cloud Deploy rollout for pipeline <b>"' + pipeline + '" </b> needs your attention. To approve or reject the rollout click <a href=' + deployurl + '>here.</a>',
   }
   try {
