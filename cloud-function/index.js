@@ -28,7 +28,7 @@
       to: process.env.TO_EMAIL,
       from: process.env.FROM_EMAIL,
       subject: 'Approval Needed: Google Cloud Deploy Build',
-      html: 'Hello! A Google Cloud Deploy release needs your attention. To approve or reject the release click <a href=' + deployurl + '>here.</a>',
+      html: 'Hello! A Google Cloud Deploy rollout for pipeline' + pipeline +' needs your attention. To approve or reject the rollout click <a href=' + deployurl + '>here.</a>',
   }
   try {
   sendgrid.send(msg);
