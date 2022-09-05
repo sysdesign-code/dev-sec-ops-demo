@@ -53,6 +53,7 @@ Below is the flow when we try to deploy a container image to GKE which voilates 
 3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
+Note - The deployment fails after the timeout value is exceeded set for your pipeline, which is 10 minutes by default, but you can change this value according to your needs.
 
 
 ## ANJALI: Solution Details - Design diagram of the complete flow
@@ -68,7 +69,7 @@ Below is the flow when we try to deploy a container image to GKE which voilates 
 
 These steps are required to setup and prepare your GCP environment. We highly recommend you create a new GCP Project as you're going to be running multiple cloud services within region "us-central1". 
 
-1. Clone the following GitHub Repo: `https://github.com/sysdesign-code/dev-sec-ops-demo 
+1. Fork the following GitHub Repo: `https://github.com/sysdesign-code/dev-sec-ops-demo 
 2. Create a new GCP Project, follow the steps here around how to provision and create one: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 3. Once your new project is created, enable Cloud SDK to allow CLI access for `gcloud`. Follow the steps here: https://cloud.google.com/sdk/docs/install
 4. Once you've enabled CLI access, either through your Cloud Shell or local workstation, set your project ID:
