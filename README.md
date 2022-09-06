@@ -60,10 +60,9 @@ Below is the flow when we try to deploy a container image to GKE, which violates
 5. Cloud Deploy fails as the GKE clusters reject the incoming image as it violates the existing Binary Authorization policy. Please note that an approval email is still triggered before the production deployment via the Cloud Function; the email receiver is expected to reject this release based on the failures in the previous stages.
 6. Once the deployment failed due to the Binary Authorization policy violation, Cloud Function sends an email to a pre-configured email id about the deployment failure. Cloud Function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/tree/main/cloud-function/deployment-notification).
 
-Note - The deployment fails after the timeout value is exceeded set for Cloud Deploy, which is 10 minutes by default, but you can change this value according to your requirements, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
+<b>Note</b>: The deployment fails after the timeout value is exceeded set for Cloud Deploy, which is 10 minutes by default, but you can change this value according to your requirements, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
 
-
-- Note: The Cloud Functions code provided for the rollout approval email and deployment failure notification is under the folder cloud-functions in this repo. You will still have to create these cloud functions with this code in your Google Cloud project to receive email notifications.
+<b>Note</b>: The Cloud Function code provided for the rollout approval email and deployment failure notification is under the folder cloud-functions in this repo. You will still have to create these cloud functions with this code in your Google Cloud project to receive email notifications.
 
 ## <b>Solution Architecture</b>
 
