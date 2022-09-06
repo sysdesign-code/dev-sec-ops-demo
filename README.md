@@ -1,5 +1,5 @@
 
-# Building a secure DevSecOps CICD delivery pipeline using Google Cloud  
+# Building a secure DevSecOps CICD delivery pipeline using Google Cloud.
 
 ## Introduction  
 
