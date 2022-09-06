@@ -7,11 +7,11 @@ DevOps is a concept which allows software development teams to release software 
 
 Also, as we build the CI/CD pipelines for faster and reliable software delivery, the security aspect should not be ignored and must be incorporated into the pipeline right from the beginning. When we build our source code, we typically make use of various open source libraries and container images and its imperetive to have some security safe guards within the CI/CD piepline to ensure that the software we are building and deploying is free from any vulnerability. Additionally, its equally important to have control over what type of code/container image should be allowed to be deployed on your target runtime enviornment. Security is everyone's responsibility. [Shifting left](https://cloud.google.com/architecture/devops/devops-tech-shifting-left-on-security) on security is a DevOps practice which allows you to address security concerns early in the software development lifecycle. Vulnerability scaning of the container images and putting security policies in place using binary Authorization to allow only known/trusted images to be dpeloyed on GKE are a couple of ways to implement this policy to make your pipelines more secure. 
 
-- What are we building -
+- What are we building :
 
 In this blog post, we will show how to build a secure CI/CD pipeline using Google Cloud's native services. We will create a secure software delivery pipeline which builds a sample Nodjs application as a container image and deploys it on GKE clusters. 
 
-- How are we building the pipeline - 
+- How are we building the pipeline : 
 
 We we going to use the following Google Cloud native services to build the pipeline - 
 
