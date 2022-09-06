@@ -67,11 +67,13 @@ Note - The deployment fails after the timeout value is exceeded set for Cloud De
 
 ## <b>Solution Architecture</b>
 
-The CI/CD pipeline is constructed by putting the aforthmentioned Google Cloud services togather. Cloud Build service is at the center of automating the pipeline which cointaines all the steps we need to build and deploy our container image. Cloud Build executes the steps defined in a yaml file in a sequential manner. Its quite flexible in terms of how you want to define your 'build' and 'deploy' process and the service ensures to execute those steps in a reliable manner everytime.
+The CI/CD pipeline is constructed by putting the aforthmentioned Google Cloud services togather. Cloud Build service is at the center of automating the pipeline which cointaines all the steps we need to build and deploy our container image. Cloud Build executes the steps defined in a yaml file in a sequential manner. It's quite flexible in terms of how you want to define your 'build' and 'deploy' process and the service ensures to execute those steps in a reliable manner everytime.
 
-Below is what the design of the CI/CD pipeline looks like. 
+Below are design diagrams of how the CI/CD pipeline is set up :
 
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Integration.jpeg)
+
+Once the Cloud Deploy is triggered, the container image is deployed to three different GKE clusters. Cloud Deploy automatically emits multiple notifications to pub/Sub topics through out the deployment process. We are using Cloud Functions to listen to these Pub/Sub topics to send appropriate email notifications about the deployment status and required approvals. 
 
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Deployment.jpeg)
 
