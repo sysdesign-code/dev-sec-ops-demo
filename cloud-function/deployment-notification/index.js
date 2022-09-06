@@ -3,13 +3,14 @@
  *
  * @param {!Object} message Event payload.
  * @param {!Object} context Metadata for the event.
+ * @author Anjali Khatri & Nitin Vashishtha
  */
  exports.cloudDeployStatus = (message, context) => {
 
     const attributes = message.attributes
     action = attributes.Action;
   
-    if (action == 'Failure') {
+    if (action == 'Failure') { // you can implement your own logic for other two events 'Start' and 'Succeed' as per your requirements
     const sendgrid = require('@sendgrid/mail');
     sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
     resource = attributes.Resource
