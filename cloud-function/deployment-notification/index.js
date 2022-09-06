@@ -28,7 +28,7 @@
     const msg = {
       to: process.env.TO_EMAIL,
       from: process.env.FROM_EMAIL,
-      subject: 'Google Cloud Deploy Build Failed',
+      subject: 'Google Cloud Deploy Rollout Failed',
       html: 'Hello! A Google Cloud Deploy rollout for pipeline <b>"' + pipeline + '" </b> is failed to deploy. Click <a href=' + deployurl + '>here to see deployment logs</a>',
   }
   try {
