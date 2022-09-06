@@ -79,7 +79,7 @@ As a last step of our CI process, the Cloud Build yaml triggers the Cloud Deploy
 
 
 
-## Step-by-Step instructions of creating the GCP CI/CD piepline
+## Step-by-Step instructions of creating the CI/CD piepline
 
 ### I. <b>Pre-Requisities</b>
 
@@ -202,7 +202,7 @@ From the main page, you will see the newly created pipeline.
 ![Screenshot](./diagrams/screenshots/II_CloudDeploy_3.jpg)
 
 
-### IV. <b>Configure Email Approval for GKE Production Cluster Deployment</b>
+### IV. <b>Configure Email Notifications for GKE Production Cluster Deployment</b>
 
 As part of a typical CI/CD process, any deployment of production workloads require a form of approval process by DevOps engineers. Cloud Deploy allows you to inject an 'approval' step before deploying a rollout to the next target. We have created this approval check in our pipeline before the deployment to the 'prod' GKE cluster . Once the piepline reaches the step to deploy the rollout to the 'prod' GKE cluster, it emits a message in 'clouddeploy-approvals' Pub/Sub topic. We have created a Cloud Function to listen to this topic and implement logic tos end email notifications via Sendgrid. You can use any other library of your choice to send emails via Cloud Functions. 
 
@@ -320,11 +320,11 @@ B. Second, a failed image deployment to GKE because of Binary Authorization poli
 3. From the GCP Console, go to the Cloud Deploy pipeline `ci-cd-test` and check the results of this latest release.
 
 
-4. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg) To recap, you can change the timeout period to be shortner, additional details can be found [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout)
+4. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg). You can change the timeout period to be shortner, additional details can be found [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout)
 
-5. From the GCP Console, go to the Kubernetes engine page and click on "Workloads". Here you will see the image deployments to both the "test" or "staging" GKE environments failed. The reason being is binary authorization policy enforcement. The "vulnerable" docker image is not approved for deployment. ![Screenshot](./diagrams/screenshots/II_GKE_4.jpg)
+5. From the GCP Console, go to the GKE page and click on "Workloads". Here you will see the image deployments to both the "test" or "staging" GKE environments failed. The reason being is binary authorization policy enforcement. The "vulnerable" docker image is not approved for deployment. ![Screenshot](./diagrams/screenshots/II_GKE_4.jpg)
 
-6. Through SendGRID emails, in parallel to a failed deployment to any of the GKE staging environments, you'll receive the following email to check the logs for the pipeline. ![Screenshot](./diagrams/screenshots/II_Email_2.png)
+6. In parallel to a failed deployment to any of the GKE staging environments, Cloud Function 'cd-deploy-notification' will send the following email to check the logs for the pipeline. ![Screenshot](./diagrams/screenshots/II_Email_2.png)
 
 7. From the email, click on `here to see deployment logs` and it will take to you to the log files withing cloud build for details on the failure of the release roll-out to GKE. ![Screenshot](./diagrams/screenshots/II_CloudBuild_11.jpg)
 
