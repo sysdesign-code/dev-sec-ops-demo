@@ -92,28 +92,21 @@ These steps are required to setup and prepare your GCP environment. We highly re
 
     ```gcloud config set project YOUR_PROJECT_ID```
 
-5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CI/CD pipeline for deploying a sample docker application. 
-
-![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Env_Setup.jpeg)
-
-
-
-Here's all the service deployments that will occur once the script finishes:
+5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CI/CD pipeline for deploying a sample docker application. ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Env_Setup.jpeg)Here's all the service deployments that will occur once the script finishes:
 
     a) Enables all the required cloud service APIs such as: Cloud Build, Binary Authorization, Kubernertes Service, Artiface Registry, Cloud Deploy and many more.
 
-    b) Create three (3) GKE clusters for test, staging and production to show image rollout deployments, across these clusters, using Cloud Deploy.
-     ![Screenshot](./diagrams/screenshots/II_GKE_1.jpg) 
+    b) Create three (3) GKE clusters for test, staging and production to show image rollout deployments, across these clusters, using Cloud Deploy. ![Screenshot](./diagrams/screenshots/II_GKE_1.jpg) 
 
     c) Bind all the necessary IAM roles and permissions for Cloud Build and Cloud Deploy.
 
     d) Create Binary Authorization attestor, associated container note, cryptographic KMS key and all the associated IAM role and permissions to allow container note access for the attestor. ![Screenshot](./diagrams/screenshots/II_BinAuthz_1.jpg)
-    By default, the binary authorization policy allows for all images to be deployed to GCP. Later, we will update this policy to only allow attestor approved images to be deployed to specific GKE clusters.
-    ![Screenshot](./diagrams/screenshots/II_BinAuthz_2.jpg) 
+
+    By default, the binary authorization policy allows for all images to be deployed to GCP. Later, we will update this policy to only allow attestor approved images to be deployed to specific GKE clusters. ![Screenshot](./diagrams/screenshots/II_BinAuthz_2.jpg) 
 
     e) Create the Artifact Registry repository where the docker image will be stored. ![Screenshot](./diagrams/screenshots/II_Artifact_1.jpg)
 
-    f) Finally, create a Pub/Sub topics and Cloud Functions which will allow for email approvals for any GKE deployment to production.
+    f) Finally, create two Pub/Sub topics and Cloud Functions which will allow for email approvals for any GKE deployment to production and error reporting if a release fails.
 
     <b>NOTE</b>
     1. Before you run the script, please validate if your new GCP project already contains a "default" VPC and subnetwork. If you already have a "default" VPC, please go through the script and COMMENT out lines 53-55 which reference the creation of a default VPC and subnetwork. If you already have one, this step is not needed. 
@@ -126,8 +119,7 @@ Here's all the service deployments that will occur once the script finishes:
     g) This script will approximately take <b>20-22</b> minutes to complete. Once finished, the output should look similar to something like [this](/scripts/gcp_env_setup_OUTPUT.txt).
 
 6. Create a SendGRID API Key. Follow the instructions here: https://app.sendgrid.com/guide/integrate to create a free "Web API" email integration for cURL and its associated API key. Take note and save your key value and verify the integration. The key details will be needed when you create the Cloud Deploy approval process later on in this blog.
-
-    Note: Using SendGRID APIs does require you to create a user account.
+<b>Note:</b> Using SendGRID APIs DOES require you to create a user account.
 
 ### II. <b>Configure Cloud Build</b>
 
