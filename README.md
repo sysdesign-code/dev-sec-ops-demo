@@ -1,5 +1,5 @@
 
-# Building a secure DevSecOps CICD delivery pipeline using Google Cloud  
+# Building a secure DevSecOps CI/CD delivery pipeline using Google Cloud  
 
 ## <b>Introduction</b>
 
@@ -67,11 +67,11 @@ Note - The deployment fails after the timeout value is exceeded set for Cloud De
 
 ## <b>Solution Architecture</b>
 
-When you're setting up your environment for CICD, here are some of the prerequisities that's required before you can kick off your DevSecOps pipeline for managing and deploying applications on GCP using our documented CICD process.
+When you're setting up your environment for CI/CD, here are some of the prerequisities that's required before you can kick off your DevSecOps pipeline for managing and deploying applications on GCP using our documented CI/CD process.
 
 1. Create a new GCP project and ensure you have access to the Cloud Console and enable the APIs for Cloud Shell. 
 
-2. The GitHub repo that contains all of the sourcecode for this CICD process is [here](https://github.com/sysdesign-code/dev-sec-ops-demo). You can either "fork" or "clone" the repo to your personal GitHub environment and access via Cloud Shell or your personal desktop.
+2. The GitHub repo that contains all of the sourcecode for this CI/CD process is [here](https://github.com/sysdesign-code/dev-sec-ops-demo). You can either "fork" or "clone" the repo to your personal GitHub environment and access via Cloud Shell or your personal desktop.
 
 3. Within the GitHub repo, we have a one-time script that needs to be run which will enable and create the necessary steps for building your application framework and how to deploy and manage that application in GCP![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Env_Setup.jpeg)
 
@@ -95,7 +95,7 @@ These steps are required to setup and prepare your GCP environment. We highly re
 
     ```gcloud config set project YOUR_PROJECT_ID```
 
-5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CICD pipeline for deploying a sample docker application. Here's all the service deployments that will occur once the script finishes:
+5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CI/CD pipeline for deploying a sample docker application. Here's all the service deployments that will occur once the script finishes:
 
     a) Enables all the required cloud service APIs such as: Cloud Build, Binary Authorization, Kubernertes Service, Artiface Registry, Cloud Deploy and many more.
 
@@ -142,9 +142,9 @@ Create a Trigger for Cloud Build
 
 1. From the "Triggers" page, click on "+ Create Trigger"
 2. Enter/Select the following values for the Trigger:
-- Name: `cicd-blog-trigger`
+- Name: `CI/CD-blog-trigger`
 - Region: `us-central1`
-- Description: `Deploy Docker Image using GCP CICD cloud services`
+- Description: `Deploy Docker Image using GCP CI/CD cloud services`
 - Event: `Push to a branch`
 - Repository: Select your forked/cloned repository
 - Branch: `^main$`
@@ -200,7 +200,7 @@ From the main page, you will see the newly created pipeline.
 
 ### IV. <b>Configure Email Approval for GKE Production Cluster Deployment</b>
 
-As part of a typical CICD process, any deployment of production workloads require a form of approval process by DevOps engineers. 
+As part of a typical CI/CD process, any deployment of production workloads require a form of approval process by DevOps engineers. 
 With Cloud Deploy, you can implement an email approval through SendGrid that will allow you to "approve" or "reject" any cloud deploy pipeline for production workloads into GKE.
 
 During the one-time-script run, this process created that a Pub/Sub topic and Cloud Function which will allow your cloud build release to send an approver email, through SendGrid.
@@ -246,7 +246,7 @@ In the following sections, we'll go into further detail explaining both paths of
 
 1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
-2. Ensure your Cloud Build trigger called `cicd-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
+2. Ensure your Cloud Build trigger called `CI/CD-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
 
 3. Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
 
@@ -284,7 +284,7 @@ A. First, failed deployment to push docker image to Artifact Registry because of
 
 1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
-2. Ensure your Cloud Build Trigger called `cicd-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
+2. Ensure your Cloud Build Trigger called `CI/CD-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
 
 3. Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
 
