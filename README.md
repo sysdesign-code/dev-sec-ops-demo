@@ -71,7 +71,7 @@ When you're setting up your environment for CI/CD, here are some of the prerequi
 
 1. Create a new GCP project and ensure you have access to the Cloud Console and enable the APIs for Cloud Shell. 
 
-2. The GitHub repo that contains all of the sourcecode for this CI/CD process is [here](https://github.com/sysdesign-code/dev-sec-ops-demo). You can either "fork" or "clone" the repo to your personal GitHub environment and access via Cloud Shell or your personal desktop.
+2. The GitHub repo that contains all of the sourcecode for this CI/CD process is [here](https://github.com/sysdesign-code/dev-sec-ops-demo). You can fork the repo to your local development machine or Cloud Shell.
 
 3. Within the GitHub repo, we have a one-time script that needs to be run which will enable and create the necessary steps for building your application framework and how to deploy and manage that application in GCP![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Env_Setup.jpeg)
 
