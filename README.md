@@ -35,7 +35,7 @@ Below is the flow of how the CI/CD piepeline is setup, without any security poli
 3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy is configured to go through an approval step before deploying the image to the Production GKE cluster. 
-6. Pre-configured email id recieves an email notifying that a Cloud Deploy release requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster. Cloud function code can be found [here](insert link)
+6. Pre-configured email id recieves an email notifying that a Cloud Deploy release requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster. Cloud function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/blob/main/cloud-function/index.js)
 
 
 In order to secure this CI/CD pipeline, we will make use of a couple of Google Cloud's native features and services. First, we will enable vulerability check on the Artificats registry, which is a out of the box feature. Then finally, we will create a security policy using Binary Authorization service which only allows certain image to be deployed on a GKE cluster. 
@@ -53,7 +53,7 @@ Below is the flow when we try to deploy a container image to GKE which voilates 
 3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
-An email is sent about the deployment failure. Cloud function code can be found [here](insert link).
+An email is sent about the deployment failure. Cloud function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/tree/main/cloud-function/deployment-notification).
 Note - The deployment fails after the timeout value is exceeded set for your pipeline, which is 10 minutes by default, but you can change this value according to your needs, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
 
 
