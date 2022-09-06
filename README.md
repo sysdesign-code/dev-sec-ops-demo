@@ -297,19 +297,34 @@ A. First, failed deployment to push docker image to Artifact Registry because of
 
 7. From the GCP Console, go to the Cloud Build service and click on "History".
 
-8. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push the image to be stored in artifact registry. ![Screenshot](./diagrams/screenshots/II_CloudBuild_10.jpg)
-
 B. Second, a failed image deployment to GKE because of binary authorization policy enforcement.
 
-1. Go back to the Trigger configuration for this build and revert the "_SEVERITY" environment variable value to being `CRITICAL` instead of "HIGH".
+1. Go back to the Trigger configuration for this build and change the "_SEVERITY" environment variable value back to being `CRITICAL` instead of "HIGH".
 
 2. To kick off the build again, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "blue" to "aquablue". After you've made the change, push and commit the changes to your GitHub repo.
 
-3. From the GCP Console, go to the Cloud Deploy and check the latest results of the pipeline.
+3. From the GCP Console, go to the Cloud Deploy pipeline `ci-cd-test` and check the results of this latest release.
 
-### IV. <b>Validate Image Deployment for "Vulnerable" Path</b>
+### <b>IV. Validate Image Deployment for "Vulnerable" Path</b>
 
+To view the failed deployment of docker image push to Artifact Registry because of severity specific vulnerabilities.
+
+1. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push this image to be stored in artifact registry. ![Screenshot](./diagrams/screenshots/II_CloudBuild_10.jpg)
+
+To view the failed image deployment to GKE because of binary authorization policy enforcement:
+
+1. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg) Unfortunately, this is a feature of Cloud Deploy that will require some improvements. There is not a way to implement a timeout period.
+
+2. From the GCP Console, go to the Kubernetes engine page and click on "Workloads". Here you will see the image deployments to both the "test" or "staging" GKE environments failed. The reason being is binary authorization policy enforcement. The "vulnerable" docker image is not approved for deployment. ![Screenshot](./diagrams/screenshots/II_GKE_4.jpg)
+
+3. Through SendGRID emails, in parallel to a failed deployment to any of the GKE staging environments, you'll receive the following email to check the logs for the pipeline. ![Screenshot](./diagrams/screenshots/II_Email_2.png)
+
+4. From the email, click on `here to see deployment logs` and it will take to you to the log files withing cloud build for details on the failure of the release roll-out to GKE. ![Screenshot](./diagrams/screenshots/II_CloudBuild_11.jpg)
 
 ## <b>Conclusion and Further Reading</b>
 
-In this blog post, we built a secure CI/CD pipeline using Google Cloud's native services. We saw how we can secure the pipeline using Google Cloud's native services such as Binary Authorization and Vulenerabiloity scaning of the container images. We only saw one way to put some control on which images can be dpeloyed on GKE cluster, but Binary Authorization also offers [Build Verification](https://cloud.google.com/binary-authorization/docs/overview#attestations) in which Binary Authorization uses attestations to verify that an image was built by a specific build system or continuous integration (CI) pipeline such as Cloud Build. Additionally, Binary Authorization also writes all the events where the deployment of a container image is blocked due to the constraints defined by the security policy, to the audit logs. You can create alerts on these log entries and notify the appropriate team members about the blocked deployment event.
+In this blog post, we built a secure CI/CD pipeline using Google Cloud's native services. 
+
+We saw how we can secure the pipeline using Google Cloud's native services such as Binary Authorization and Vulenerabiloity scaning of the container images. We only saw one way to put some control on which images can be dpeloyed on GKE cluster, but Binary Authorization also offers [Build Verification](https://cloud.google.com/binary-authorization/docs/overview#attestations) in which Binary Authorization uses attestations to verify that an image was built by a specific build system or continuous integration (CI) pipeline such as Cloud Build. 
+
+Additionally, Binary Authorization also writes all the events where the deployment of a container image is blocked due to the constraints defined by the security policy, to the audit logs. You can create alerts on these log entries and notify the appropriate team members about the blocked deployment event.
