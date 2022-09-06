@@ -76,13 +76,6 @@ As the last step of our CI process, the Cloud Build YAML triggers the Cloud Depl
 
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Deployment.jpeg)
 
-
-
-## Step-by-Step instructions for creating the CI/CD pipeline
-
-
-
-
 ## Step-by-Step instructions for creating the CI/CD pipeline
 
 ### I. <b>Pre-Requisities</b>
