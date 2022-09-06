@@ -3,11 +3,11 @@
 
 ## <b>Introduction</b>
 
-DevOps is a concept which allows software development teams to release software in an automated and stable way. DevOps itself is not just one thing, its a combinatin of culture and technology, which together make the actual implementation of DevOps successful. 
+DevOps is a concept which allows software development teams to release software in an automated and stable manner. DevOps itself is not just one thing, it's a combinatin of culture and technology, which together make the implementation of DevOps successful. 
 
 In this blog, we will be focusing on the tools and technology side of DevOps. At the core of the technical aspect of DevOps concept is Continous Integration and Continous Delivery (CI/CD). The idea behind CI/CD concept is to create an automated software delivery pipeline which continoiusly deploys the new software releases in an automated fashion. 
 
-The flow begins with the developers commitng the code chnages to a source code repository, which automatically triggers the pipeline by building and dpeloying the code changes into various enviornments starting from non-prod enviornments to production enviornment. 
+The flow begins with the developers commitng the code chnages to a source code repository, which automatically triggers the delivery pipeline (henceforth called CI/CD pipeline) by building and deploying the code changes into various enviornments starting from non-prod enviornments to production enviornment. 
 
 Also, as we build the CI/CD pipelines for faster and reliable software delivery, the security aspect should not be ignored and must be incorporated into the pipeline right from the beginning. When we build our source code, we typically make use of various open source libraries and container images and its imperetive to have some security safe guards within the CI/CD piepline to ensure that the software we are building and deploying is free from any vulnerability. Additionally, its equally important to have control over what type of code/container image should be allowed to be deployed on your target runtime enviornment. Security is everyone's responsibility. 
 
