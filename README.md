@@ -297,9 +297,9 @@ A. First, failed deployment to push docker image to Artifact Registry because of
 
 7. From the GCP Console, go to the Cloud Build service and click on "History".
 
-8. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push the image to be stored in artifact registry. 
+8. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push the image to be stored in artifact registry. ![Screenshot](./diagrams/screenshots/II_CloudBuild_10.jpg)
 
-B. Finally, a failed image deployment to GKE because of binary authorization policy enforcement.
+B. Second, a failed image deployment to GKE because of binary authorization policy enforcement.
 
 1. Go back to the Trigger configuration for this build and revert the "_SEVERITY" environment variable value to being `CRITICAL` instead of "HIGH".
 
