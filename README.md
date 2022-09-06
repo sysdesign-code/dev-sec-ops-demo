@@ -241,7 +241,7 @@ To recap, when binary authorization is enabled, its default policy allows all im
 
 In the following sections, we'll go into further detail explaining both paths of image deployment to GKE.
 
-### I. <b>Run Cloud Build Configuration File for "Happy" Docker Path</b>
+### I. <b>Run Cloud Build Configuration File for "Happy" Path</b>
 
 1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
@@ -275,7 +275,7 @@ In the following sections, we'll go into further detail explaining both paths of
 
 7. If you go back to the Kubernetes worload page, you'll see that the image roll-out to prod was successful. ![Screenshot](./diagrams/screenshots/II_GKE_3.jpg) In parallel, validate your Cloud Deploy, continuous deployment pipeline also confirms a successful roll-out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_6.jpg)
 
-### III. <b>Run Cloud Build Configuration File for "Vulnerable" Docker Path</b>
+### III. <b>Run Cloud Build Configuration File for "Vulnerable" Path (container image has vulnerabilities)</b>
 
 To recap, we will show two failure paths with this deployment, which are: image vulnerabilities and binary authorization policy enforcement.
 
