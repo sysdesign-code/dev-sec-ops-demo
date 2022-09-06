@@ -7,11 +7,11 @@ DevOps is a concept which allows software development teams to release software 
 
 In this blog, we will be focusing on the tools and technology side of DevOps. At the core of the technical aspect of DevOps concept is Continous Integration and Continous Delivery (CI/CD). The idea behind CI/CD concept is to create an automated software delivery pipeline which continoiusly deploys the new software releases in an automated fashion. 
 
-The flow begins with the developers commitng the code chnages to a source code repository, which automatically triggers the delivery pipeline (henceforth called CI/CD pipeline) by building and deploying the code changes into various enviornments starting from non-prod enviornments to production enviornment. 
+The flow begins with the developers commitng the code changes to a source code repository, which automatically triggers the delivery pipeline (henceforth called CI/CD pipeline) by building and deploying the code changes into various enviornments starting from non-prod enviornments to production enviornment. 
 
-Also, as we build the CI/CD pipelines for faster and reliable software delivery, the security aspect should not be ignored and must be incorporated into the pipeline right from the beginning. When we build our source code, we typically make use of various open source libraries and container images and its imperetive to have some security safe guards within the CI/CD piepline to ensure that the software we are building and deploying is free from any vulnerability. Additionally, its equally important to have control over what type of code/container image should be allowed to be deployed on your target runtime enviornment. Security is everyone's responsibility. 
+Also, as we build the CI/CD pipelines for faster and reliable software delivery, the security aspect should not be ignored and must be incorporated into the pipeline right from the beginning. When we build our source code, we typically make use of various open source libraries and container images and it's imperetive to have some security safe guards within the CI/CD piepline to ensure that the software we are building and deploying is free from any vulnerability. Additionally, it's equally important to have control over what type of code/container image should be allowed to be deployed on your target runtime enviornment. 
 
-[Shifting left](https://cloud.google.com/architecture/devops/devops-tech-shifting-left-on-security) on security is a DevOps practice which allows you to address security concerns early in the software development lifecycle. Vulnerability scaning of the container images and putting security policies in place using binary Authorization to allow only known/trusted images to be dpeloyed on GKE are a couple of ways to implement this policy to make your pipelines more secure. 
+Security is everyone's responsibility. [Shifting left](https://cloud.google.com/architecture/devops/devops-tech-shifting-left-on-security) on security is a DevOps practice which allows you to address security concerns early in the software development lifecycle. Vulnerability scaning of the container images and putting security policies in place using Binary Authorization to allow only known/trusted images to be deployed on GKE are a couple of ways to implement this policy to make your CI/CD pipelines more secure. 
 
 <b>What are we building?</b>
 
@@ -26,40 +26,41 @@ We we going to use the following Google Cloud native services to build the pipel
 3. [Cloud Deploy](https://cloud.google.com/deploy) - Cloud Deploy is a fully managed Continous Delivery service for GKE and Anthos.
 4. [Binary Authorization](https://cloud.google.com/binary-authorization) - Binary Authorization provides deploy time security controls for GKE and Cloud Run deployments.
 5. [GKE](https://cloud.google.com/kubernetes-engine) - GKE is a fully managed Kubernetes platform.
-6. [Google Pub/Sub](https://cloud.google.com/pubsub) - A serverless messaging platform.
-7. [Cloud Functions](https://cloud.google.com/functions) - A serverless platform to run your code.
+6. [Google Pub/Sub](https://cloud.google.com/pubsub) - Pub/Sub is a serverless messaging platform.
+7. [Cloud Functions](https://cloud.google.com/functions) - Cloud Functions is a serverless platform to run your code.
 
 We are are using github as a source code reporsitory and Sendgrid APIs to send email.
 
-The CI/CD piepeline is setup in a way that a Cloud Build trigger is configured to sense any code push to a certain reporsitory and branch in the github, it starts the build process.
+The CI/CD piepeline is setup in a way that a Cloud Build trigger is configured to sense any code push to a certain reporsitory and branch in a github repository and it automatically starts the build process.
 
 Below is the flow of how the CI/CD piepeline is setup, without any security policy enforecement:
 
-1. Developer checks in the code to a github repo
-2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
+1. Developer checks in the code to a github repo.
+2. A Cloud Build trigger is configured to sense any new code push to this github repo and starts the 'build' process. A successful build results into a docker container image.
 3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy is configured to go through an approval step before deploying the image to the Production GKE cluster. 
-6. Pre-configured email id recieves an email notifying that a Cloud Deploy release requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster. Cloud function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/blob/main/cloud-function/index.js)
+6. A Cloud Function sends an email to a pre-configured email id, notifying that a Cloud Deploy rollout requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster. Cloud Function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/blob/main/cloud-function/index.js)
 
 
-In order to secure this CI/CD pipeline, we will make use of a couple of Google Cloud's native features and services. First, we will enable vulerability check on the Artificats registry, which is a out of the box feature. Then finally, we will create a security policy using Binary Authorization service which only allows certain image to be deployed on a GKE cluster. 
+In order to secure this CI/CD pipeline, we will make use of a couple of Google Cloud's native features and services. First, we will enable vulerability check on the Artificats Registry, which is a out of the box feature. Then finally, we will create a security policy using Binary Authorization service which only allows certain image to be deployed on a GKE cluster. 
 
-Below is the flow when we try to build and deploy a container image which has vulerability present:
+Below is the flow when we try to build and deploy a container image which has vulerabilities present:
 
-1. Developer checks in the code to a github repo
+1. Developer checks in the code to a github repo.
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. 
 3. The build process fails with the error message that some critical vulerabilities were found in the image.
 
 Below is the flow when we try to deploy a container image to GKE which violates a Binary Authorization policy: 
 
-1. Developer checks in the code to a github repo
+1. Developer checks in the code to a github repo.
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
 3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
-5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
-An email is sent about the deployment failure. Cloud function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/tree/main/cloud-function/deployment-notification).
-Note - The deployment fails after the timeout value is exceeded set for your pipeline, which is 10 minutes by default, but you can change this value according to your needs, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
+5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment via the Cloud Function, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
+6. Once the deployment is failed due to the Binary Authorizatin policy voilation, a Cloud Function sends an email to a pre-configured email id about the deployment failure. Cloud Function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/tree/main/cloud-function/deployment-notification).
+
+Note - The deployment fails after the timeout value is exceeded set for Cloud Deploy, which is 10 minutes by default, but you can change this value according to your requirements, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
 
 
 - Note : The Cloud Functions code provided for the rollout approval email and deployment failure notification is under the folder cloud-functions in this repo. You will still have to create these cloud functions with this code in your Google Cloud project to recieve email notifications.
