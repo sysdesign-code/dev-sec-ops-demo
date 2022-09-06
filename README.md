@@ -73,7 +73,7 @@ Below are design diagrams of how the CI/CD pipeline is set up :
 
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Integration.jpeg)
 
-Once the Cloud Deploy is triggered, the container image is deployed to three different GKE clusters. Cloud Deploy automatically emits multiple notifications to pub/Sub topics through out the deployment process. We are using Cloud Functions to listen to these Pub/Sub topics to send appropriate email notifications about the deployment status and required approvals. 
+As a last step of our CI process, the Cloud Build yaml triggers the Cloud Deploy service and the container image is deployed to three different GKE clusters. Cloud Deploy automatically emits multiple notifications to pub/Sub topics through out the deployment process. We are using Cloud Functions to listen to these Pub/Sub topics to send appropriate email notifications about the deployment status and required approvals. 
 
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Deployment.jpeg)
 
@@ -87,7 +87,7 @@ These steps are required to setup and prepare your GCP environment. We highly re
 
 1. Fork the following GitHub Repo: https://github.com/sysdesign-code/dev-sec-ops-demo 
 2. Create a new GCP Project, follow the steps here around how to provision and create one: https://cloud.google.com/resource-manager/docs/creating-managing-projects
-3. Once your new project is created, enable Cloud SDK to allow CLI access for `gcloud` either in Cloud Shell or Personal Desktop. Follow the steps here: https://cloud.google.com/sdk/docs/install
+3. Once your new project is created, enable Cloud SDK to allow CLI access for `gcloud` either in Cloud Shell or local workstation. Follow the steps here: https://cloud.google.com/sdk/docs/install
 4. Once you've enabled CLI access, either through your Cloud Shell or local workstation, validate or set your project ID:
 
     ```gcloud config set project YOUR_PROJECT_ID```
@@ -102,7 +102,8 @@ Here's all the service deployments that will occur once the script finishes:
 
     a) Enables all the required cloud service APIs such as: Cloud Build, Binary Authorization, Kubernertes Service, Artiface Registry, Cloud Deploy and many more.
 
-    b) Create three (3) GKE clusters for test, staging and production to show image roll-out deployments, across these clusters, using Cloud Deploy. ![Screenshot](./diagrams/screenshots/II_GKE_1.jpg) 
+    b) Create three (3) GKE clusters for test, staging and production to show image rollout deployments, across these clusters, using Cloud Deploy.
+     ![Screenshot](./diagrams/screenshots/II_GKE_1.jpg) 
 
     c) Bind all the necessary IAM roles and permissions for Cloud Build and Cloud Deploy.
 
@@ -110,9 +111,9 @@ Here's all the service deployments that will occur once the script finishes:
     By default, the binary authorization policy allows for all images to be deployed to GCP. Later, we will update this policy to only allow attestor approved images to be deployed to specific GKE clusters.
     ![Screenshot](./diagrams/screenshots/II_BinAuthz_2.jpg) 
 
-    e) Create the artifact registry repository where the docker image will be stored. ![Screenshot](./diagrams/screenshots/II_Artifact_1.jpg)
+    e) Create the Artifact Registry repository where the docker image will be stored. ![Screenshot](./diagrams/screenshots/II_Artifact_1.jpg)
 
-    f) Finally, create a pub/sub topic and cloud function which will allow for email approvals for any GKE deployment to production.
+    f) Finally, create a Pub/Sub topics and Cloud Functions which will allow for email approvals for any GKE deployment to production.
 
     <b>NOTE</b>
     1. Before you run the script, please validate if your new GCP project already contains a "default" VPC and subnetwork. If you already have a "default" VPC, please go through the script and COMMENT out lines 53-55 which reference the creation of a default VPC and subnetwork. If you already have one, this step is not needed. 
@@ -130,9 +131,9 @@ Here's all the service deployments that will occur once the script finishes:
 
 ### II. <b>Configure Cloud Build</b>
 
-This step requires integrating your forked/cloned github (from Pre-Requisities, Step 1) as a managed repository to GCP's cloud build service and creating the necessary trigger. The goal of this integration means that any updates that you make to your application within your forked/cloned GitHub page, will automically kick off a cloud build deployment which will create, enable and deploy your application to GKE.
+This step requires integrating your git repository (from Pre-Requisities, Step 1) as a managed repository to GCP's cloud build service and creating the necessary trigger. The goal of this integration means that any updates that you make to your application within your git repository, will automically kick off a Cloud Build deployment which will create, enable and deploy your application to GKE.
 
-Create the GitHub Repository Integration for Cloud Build
+Create the GitHub Repository Integration for Cloud Build :
 
 1. To start, from your GCP Console homepage, type "Cloud Build" within the search bar and select this service.
 2. From the left hand panel, click on "Triggers". And click on "Connect Repository"
@@ -164,13 +165,13 @@ Once the trigger is created, it will look like the following: ![Screenshot](./di
 
 ### III. <b>Create Cloud Deploy Pipeline</b>
 
-Now that we have GitHub integration and Trigger created for Cloud Build, the next step is to create the Cloud Deploy pipeline which will deploy the docker application to the three GKE environments: "test", "staging" and "prod" once the image release for all 3 environments is created through Cloud Build. The requirement for the image release, requires a Cloud Deploy pipeline.
+Now that we have GitHub integration and trigger created for Cloud Build, the next step is to create the Cloud Deploy pipeline which will deploy the container image to the three GKE environments: "test", "staging" and "prod" once the image release for all 3 environments is created through Cloud Build. The requirement for the image release, requires a Cloud Deploy pipeline.
 
-1. Edit the Cloud Deploy YAML with your GCP project ID. From your forked/cloned GitHub page, click on `clouddeploy.yaml`.
+1. Edit the clouddeploy.yaml file with your GCP project ID.
 2. Within the file, update lines 22, 32 and 42 with your respective GCP project ID
 ![Screenshot](./diagrams/screenshots/II_CloudDeploy_2.jpg)
 3. Once this is updated, save the file.
-4. Either through Cloud Shell or your local dekstop, run the following GCP command to create the enviroment variables and the Cloud Deploy pipeline called `ci-cd-test`: 
+4. Either through Cloud Shell or your local workstation, run the following GCP command to create the enviroment variables and the Cloud Deploy pipeline called `ci-cd-test`: 
     ```
     PROJECT_ID=<<YOUR_PROJECT_ID>>
     LOCATION=us-central1
@@ -203,10 +204,10 @@ From the main page, you will see the newly created pipeline.
 
 ### IV. <b>Configure Email Approval for GKE Production Cluster Deployment</b>
 
-As part of a typical CI/CD process, any deployment of production workloads require a form of approval process by DevOps engineers. 
-With Cloud Deploy, you can implement an email approval through SendGrid that will allow you to "approve" or "reject" any cloud deploy pipeline for production workloads into GKE.
+As part of a typical CI/CD process, any deployment of production workloads require a form of approval process by DevOps engineers. Cloud Deploy allows you to inject an 'approval' step before deploying a rollout to the next target. We have created this approval check in our pipeline before the deployment to the 'prod' GKE cluster . Once the piepline reaches the step to deploy the rollout to the 'prod' GKE cluster, it emits a message in 'clouddeploy-approvals' Pub/Sub topic. We have created a Cloud Function to listen to this topic and implement logic tos end email notifications via Sendgrid. You can use any other library of your choice to send emails via Cloud Functions. 
 
-During the one-time-script run, this process created that a Pub/Sub topic and Cloud Function which will allow your cloud build release to send an approver email, through SendGrid.
+
+The one-time-script has created that a Pub/Sub topic and Cloud Function which will allow your cloud build release to send an approver email.
 
 To validate the Pub/Sub topics and Cloud Function was created, go to those respective services and ensure they were created.
 
@@ -235,29 +236,32 @@ Now, that all the GCP pre-requisities and environment setup is complete for Clou
 
 Couple of items to note during this test, we're going to show a "Happy" and "Vulnerable" Image deployment path to GKE.
 
-The "Happy" docker path will show a successful deployment of the end-to-end pipeline across 9 steps for a clean image deployment to GKE. "Clean" refers to the docker image with non-critical vulnerabilities. This path will also update the binary authorization policy that allows only the "Happy" image to be deployed to GKE's "test", "staging" and eventually "production" environments, which will be approved by a DevOps engineer. ![Screenshot](./diagrams/screenshots/II_CloudBuild_7.jpg)
+The "Happy" path will show a successful deployment of the end-to-end pipeline across 9 steps for a clean image deployment to GKE. "Clean" refers to the docker image with non-critical vulnerabilities. This path will also update the Binary Authorization policy that allows only the "Happy" image to be deployed to GKE's "test", "staging" and eventually "production" environments, which will be approved by a DevOps engineer.
 
-The "Vulernable" docker path will show a failed ddeployment of the end-to-end pipeline across 7 steps. The pipeline will fail in 2 of these steps because the image has: 
-- Certain vulnerabilities that need to be addressed before the image can be stored in Artifact registry. 
-- A failed deployment to GKE because this is a non-approved image without attestation, and it violates the updated binary authorization policy from the "Happy" path.
+ ![Screenshot](./diagrams/screenshots/II_CloudBuild_7.jpg)
 
-To recap, when binary authorization is enabled, its default policy allows all images to be deployed to GCP, without attestion. In the "Happy" path, we will update the default binary authorization policy where only the "Happy" docker image is approved for deployment to GKE and all non-approved images, such as the "vulnerable" path, the pipeline will fail the deployment.
+The "Vulernable" docker path will show a failed deployment of the end-to-end pipeline across 7 steps. The pipeline will fail in 2 of these steps because the image has: 
+- Certain vulnerabilities that need to be addressed before the image can be stored in Artifact Registry. 
+- A failed deployment to GKE because this is a non-approved image without attestation, and it violates the updated Binary Authorization policy from the "Happy" path.
+
+To recap, when Binary Authorization is enabled, it's default policy allows all images to be deployed to the target enviornments, without attestion. In the "Happy" path, we will update the default Binary Authorization policy where only certain docker image is approved for deployment to GKE and any other image which is not approved by the Binary Authorization policy will be rehjected by  GKE at the deployment time.
+
 
 In the following sections, we'll go into further detail explaining both paths of image deployment to GKE.
 
 ### I. <b>Run Cloud Build Configuration File for "Happy" Path</b>
 
-1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
+1. Ensure your GitHub repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
 2. Ensure your Cloud Build trigger called `CI/CD-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
 
-3. Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
+3. Since the trigger is already enabled, any updates to your repository will trigger this Cloud Build deployment.
 
 4. From your GitHub repo, open up the `cloudbuild.yaml`. This is the cloud build configuration file for the "Happy" Docker path.
 
-5. To kick off the build, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "Green" to "red".
+5. To kick off the build, make any update to your codebase such as update the `/src/static/js` file for any cosmetic change.
 
-6. After you've made the change, push and commit the changes to your GitHub repo.
+6. After you've made the change, push the changes to your GitHub repo.
 
 7. From the GCP Console, go to the Cloud Build service and click on "History".
 
@@ -273,7 +277,7 @@ In the following sections, we'll go into further detail explaining both paths of
 
 4. From the GCP Console, search for Kubernetes Engine and from the left hand navigation, click on "Workloads". Here you can see, that the deployment of the image is succesful in the two "test" and "staging" GKE environments. ![Screenshot](./diagrams/screenshots/II_GKE_2.jpg)
 
-5. Now that the deployment is queued for production, when you setup your SendGRID API, check your primary email and validate that you received a notifcation for approval. It will look something like this. ![Screenshot](./diagrams/screenshots/II_Email_1.png) From the email, click the `here` hyperlink and it will take you to the cloud deploy pipeline page.
+5. Now that the deployment is queued for production, check your primary email and validate that you received a notifcation for approval. It will look something like this. ![Screenshot](./diagrams/screenshots/II_Email_1.png) From the email, click the `here` hyperlink and it will take you to the cloud deploy pipeline page.
 
 6. From the Pipeline page, approve or reject the release so the deployment can be pushed to "prod" in GKE. In this case, we will approve. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_5.jpg)
 
@@ -281,15 +285,15 @@ In the following sections, we'll go into further detail explaining both paths of
 
 ### III. <b>Run Cloud Build Configuration File for "Vulnerable" Path (container image has vulnerabilities)</b>
 
-To recap, we will show two failure paths with this deployment, which are: image vulnerabilities and binary authorization policy enforcement.
+We will show two failure paths with this deployment, which are: image vulnerabilities and Binary Authorization policy enforcement.
 
-A. First, failed deployment to push docker image to Artifact Registry because of severity specific vulnerabilities.
+A. First, failed deployment to push docker image to Artifact Registry because of severity specific vulnerabilities -
 
 1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
 2. Ensure your Cloud Build Trigger called `CI/CD-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
 
-3. Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
+3. Since the trigger is already enabled, any updates to your repository will trigger this cloud build deployment.
 
 4. From your GitHub repo, view the `cloudbuild-vulnerable.yaml` file. This is the cloud build configuration file for the "Vulnerable" Docker path.
 
@@ -301,33 +305,28 @@ A. First, failed deployment to push docker image to Artifact Registry because of
 
 - Save the trigger and validate its status is "Enabled".
 
-6. To kick off the build, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "red" to "blue". After you've made the change, push and commit the changes to your GitHub repo.
+6. To kick off the build, make any update to your codebase such as update the `/src/static/js` file for any cosmetic change. After you've made the change, push the changes to your GitHub repo.
 
 7. From the GCP Console, go to the Cloud Build service and click on "History".
 
-B. Second, a failed image deployment to GKE because of binary authorization policy enforcement.
+8. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push this image to be stored in artifact registry. ![Screenshot](./diagrams/screenshots/II_CloudBuild_10.jpg)
+
+B. Second, a failed image deployment to GKE because of Binary Authorization policy enforcement -
 
 1. Go back to the Trigger configuration for this build and change the "_SEVERITY" environment variable value back to being `CRITICAL` instead of "HIGH".
 
-2. To kick off the build again, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "blue" to "aquablue". After you've made the change, push and commit the changes to your GitHub repo.
+2. To kick off the build, make any update to your codebase such as update the `/src/static/js` file for any cosmetic change. After you've made the change, push the changes to your GitHub repo.
 
 3. From the GCP Console, go to the Cloud Deploy pipeline `ci-cd-test` and check the results of this latest release.
 
-### <b>IV. Validate Image Deployment for "Vulnerable" Path</b>
 
-To view the failed deployment of docker image push to Artifact Registry because of severity specific vulnerabilities.
+4. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg) To recap, you can change the timeout period to be shortner, additional details can be found [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout)
 
-1. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push this image to be stored in artifact registry. ![Screenshot](./diagrams/screenshots/II_CloudBuild_10.jpg)
+5. From the GCP Console, go to the Kubernetes engine page and click on "Workloads". Here you will see the image deployments to both the "test" or "staging" GKE environments failed. The reason being is binary authorization policy enforcement. The "vulnerable" docker image is not approved for deployment. ![Screenshot](./diagrams/screenshots/II_GKE_4.jpg)
 
-To view the failed image deployment to GKE because of binary authorization policy enforcement:
+6. Through SendGRID emails, in parallel to a failed deployment to any of the GKE staging environments, you'll receive the following email to check the logs for the pipeline. ![Screenshot](./diagrams/screenshots/II_Email_2.png)
 
-1. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg) To recap, you can change the timeout period to be shortner, additional details can be found [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout)
-
-2. From the GCP Console, go to the Kubernetes engine page and click on "Workloads". Here you will see the image deployments to both the "test" or "staging" GKE environments failed. The reason being is binary authorization policy enforcement. The "vulnerable" docker image is not approved for deployment. ![Screenshot](./diagrams/screenshots/II_GKE_4.jpg)
-
-3. Through SendGRID emails, in parallel to a failed deployment to any of the GKE staging environments, you'll receive the following email to check the logs for the pipeline. ![Screenshot](./diagrams/screenshots/II_Email_2.png)
-
-4. From the email, click on `here to see deployment logs` and it will take to you to the log files withing cloud build for details on the failure of the release roll-out to GKE. ![Screenshot](./diagrams/screenshots/II_CloudBuild_11.jpg)
+7. From the email, click on `here to see deployment logs` and it will take to you to the log files withing cloud build for details on the failure of the release roll-out to GKE. ![Screenshot](./diagrams/screenshots/II_CloudBuild_11.jpg)
 
 ## <b>Conclusion and Further Reading</b>
 
