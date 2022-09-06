@@ -1,0 +1,419 @@
+$ sh scripts/gcp_env_setup.sh
+Operation "operations/acf.p2-PROJECT_NUMBER-ed450a0a-94b0-4903-a2f8-adfd892ba606" finished successfully.
+Operation "operations/acf.p2-PROJECT_NUMBER-92fa5ceb-4bc3-4ed1-952c-ed493d67a0d4" finished successfully.
+Operation "operations/acat.p2-PROJECT_NUMBER-5ec0bdcc-e0a1-46da-8364-278fa1431bb1" finished successfully.
+Operation "operations/acat.p2-PROJECT_NUMBER-eec29ea9-118a-4f50-bd43-188f1dd510d4" finished successfully.
+Operation "operations/acat.p2-PROJECT_NUMBER-c124403e-fde6-4fbd-9b18-590acf58e5de" finished successfully.
+Operation "operations/acf.p2-PROJECT_NUMBER-aa7ac987-61a1-492c-ab94-5b8a3662e9d8" finished successfully.
+Operation "operations/acat.p2-PROJECT_NUMBER-a76fd095-a317-440b-9112-9a7168ba5d49" finished successfully.
+Operation "operations/acat.p2-PROJECT_NUMBER-86e5b0b8-32e4-462c-9d97-5e57ac0be567" finished successfully.
+Operation "operations/acf.p2-PROJECT_NUMBER-03e181a5-dadd-494a-8eaa-28849319941f" finished successfully.
+Created role [cicdblogrole].
+description: Custom Role for GCP CICD Blog
+etag: BwXnU0fZ85Y=
+includedPermissions:
+- artifactregistry.repositories.create
+- binaryauthorization.attestors.get
+- binaryauthorization.attestors.list
+- binaryauthorization.policy.update
+- clouddeploy.deliveryPipelines.get
+- clouddeploy.releases.get
+- cloudkms.cryptoKeyVersions.useToSign
+- cloudkms.cryptoKeyVersions.viewPublicKey
+- container.clusters.get
+- containeranalysis.notes.attachOccurrence
+- containeranalysis.notes.create
+- containeranalysis.notes.listOccurrences
+- containeranalysis.notes.setIamPolicy
+- iam.serviceAccounts.actAs
+- ondemandscanning.operations.get
+- ondemandscanning.scans.analyzePackages
+- ondemandscanning.scans.listVulnerabilities
+- serviceusage.services.enable
+- storage.objects.get
+name: projects/PROJECT_ID/roles/cicdblogrole
+stage: BETA
+title: cicdblogrole
+Updated IAM policy for project [PROJECT_ID].
+bindings:
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: projects/PROJECT_ID/roles/cicdblogrole
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-binaryauthorization.iam.gserviceaccount.com
+  role: roles/binaryauthorization.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/cloudbuild.builds.builder
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com
+  role: roles/cloudbuild.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com
+  role: roles/cloudfunctions.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com
+  role: roles/compute.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-engine-robot.iam.gserviceaccount.com
+  role: roles/container.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com
+  role: roles/containeranalysis.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com
+  role: roles/containerregistry.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-containerscanning.iam.gserviceaccount.com
+  role: roles/containerscanning.ServiceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com
+  role: roles/editor
+- members:
+  - user:admin@anjalikhatri.altostrat.com
+  - user:ubuntu@anjalikhatri.altostrat.com
+  role: roles/owner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
+  role: roles/pubsub.serviceAgent
+etag: BwXnU0f1RHs=
+version: 1
+Updated IAM policy for project [PROJECT_ID].
+bindings:
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: projects/PROJECT_ID/roles/cicdblogrole
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-binaryauthorization.iam.gserviceaccount.com
+  role: roles/binaryauthorization.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/cloudbuild.builds.builder
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com
+  role: roles/cloudbuild.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/clouddeploy.admin
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com
+  role: roles/cloudfunctions.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com
+  role: roles/compute.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-engine-robot.iam.gserviceaccount.com
+  role: roles/container.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com
+  role: roles/containeranalysis.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com
+  role: roles/containerregistry.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-containerscanning.iam.gserviceaccount.com
+  role: roles/containerscanning.ServiceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com
+  role: roles/editor
+- members:
+  - user:admin@anjalikhatri.altostrat.com
+  - user:ubuntu@anjalikhatri.altostrat.com
+  role: roles/owner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
+  role: roles/pubsub.serviceAgent
+etag: BwXnU0gUlvw=
+version: 1
+Updated IAM policy for project [PROJECT_ID].
+bindings:
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: projects/PROJECT_ID/roles/cicdblogrole
+- members:
+  - serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com
+  role: roles/artifactregistry.reader
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-binaryauthorization.iam.gserviceaccount.com
+  role: roles/binaryauthorization.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/cloudbuild.builds.builder
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com
+  role: roles/cloudbuild.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/clouddeploy.admin
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com
+  role: roles/cloudfunctions.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com
+  role: roles/compute.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-engine-robot.iam.gserviceaccount.com
+  role: roles/container.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com
+  role: roles/containeranalysis.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com
+  role: roles/containerregistry.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-containerscanning.iam.gserviceaccount.com
+  role: roles/containerscanning.ServiceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com
+  role: roles/editor
+- members:
+  - user:admin@anjalikhatri.altostrat.com
+  - user:ubuntu@anjalikhatri.altostrat.com
+  role: roles/owner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
+  role: roles/pubsub.serviceAgent
+etag: BwXnU0gyErE=
+version: 1
+Updated IAM policy for project [PROJECT_ID].
+bindings:
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: projects/PROJECT_ID/roles/cicdblogrole
+- members:
+  - serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com
+  role: roles/artifactregistry.reader
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-binaryauthorization.iam.gserviceaccount.com
+  role: roles/binaryauthorization.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/cloudbuild.builds.builder
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com
+  role: roles/cloudbuild.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/clouddeploy.admin
+- members:
+  - serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com
+  role: roles/clouddeploy.jobRunner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com
+  role: roles/cloudfunctions.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com
+  role: roles/compute.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-engine-robot.iam.gserviceaccount.com
+  role: roles/container.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com
+  role: roles/containeranalysis.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com
+  role: roles/containerregistry.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-containerscanning.iam.gserviceaccount.com
+  role: roles/containerscanning.ServiceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com
+  role: roles/editor
+- members:
+  - user:admin@anjalikhatri.altostrat.com
+  - user:ubuntu@anjalikhatri.altostrat.com
+  role: roles/owner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
+  role: roles/pubsub.serviceAgent
+etag: BwXnU0hR7nY=
+version: 1
+Updated IAM policy for project [PROJECT_ID].
+bindings:
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: projects/PROJECT_ID/roles/cicdblogrole
+- members:
+  - serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com
+  role: roles/artifactregistry.reader
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-binaryauthorization.iam.gserviceaccount.com
+  role: roles/binaryauthorization.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/cloudbuild.builds.builder
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com
+  role: roles/cloudbuild.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudbuild.gserviceaccount.com
+  role: roles/clouddeploy.admin
+- members:
+  - serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com
+  role: roles/clouddeploy.jobRunner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com
+  role: roles/cloudfunctions.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@compute-system.iam.gserviceaccount.com
+  role: roles/compute.serviceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com
+  role: roles/container.admin
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-engine-robot.iam.gserviceaccount.com
+  role: roles/container.serviceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@container-analysis.iam.gserviceaccount.com
+  role: roles/containeranalysis.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@containerregistry.iam.gserviceaccount.com
+  role: roles/containerregistry.ServiceAgent
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-containerscanning.iam.gserviceaccount.com
+  role: roles/containerscanning.ServiceAgent
+- members:
+  - serviceAccount:PROJECT_NUMBER@cloudservices.gserviceaccount.com
+  role: roles/editor
+- members:
+  - user:admin@anjalikhatri.altostrat.com
+  - user:ubuntu@anjalikhatri.altostrat.com
+  role: roles/owner
+- members:
+  - serviceAccount:service-PROJECT_NUMBER@gcp-sa-pubsub.iam.gserviceaccount.com
+  role: roles/pubsub.serviceAgent
+etag: BwXnU0htzG0=
+version: 1
+Created [https://www.googleapis.com/compute/v1/projects/PROJECT_ID/global/networks/default].
+NAME: default
+SUBNET_MODE: CUSTOM
+BGP_ROUTING_MODE: REGIONAL
+IPV4_RANGE:
+GATEWAY_IPV4:
+
+Instances on this network will not be reachable until firewall rules
+are created. As an example, you can allow all internal traffic between
+instances as well as SSH, RDP, and ICMP by running:
+
+$ gcloud compute firewall-rules create <FIREWALL_NAME> --network default --allow tcp,udp,icmp --source-ranges <IP_RANGE>
+$ gcloud compute firewall-rules create <FIREWALL_NAME> --network default --allow tcp:22,tcp:3389,icmp
+
+Created [https://www.googleapis.com/compute/v1/projects/PROJECT_ID/regions/us-central1/subnetworks/default].
+NAME: default
+REGION: us-central1
+NETWORK: default
+RANGE: 10.128.0.0/20
+STACK_TYPE: IPV4_ONLY
+IPV6_ACCESS_TYPE:
+INTERNAL_IPV6_PREFIX:
+EXTERNAL_IPV6_PREFIX:
+{
+  "name": "projects/PROJECT_ID/notes/cb-attestor-note",
+  "kind": "ATTESTATION",
+  "createTime": "2022-08-28T20:49:51.658772Z",
+  "updateTime": "2022-08-28T20:49:51.658772Z",
+  "attestation": {
+    "hint": {
+      "humanReadableName": "Attestor Note is Created, Requires the creation of an attestor"
+    }
+  }
+}
+{
+  "version": 1,
+  "etag": "BwXnU0oPYgo=",
+  "bindings": [
+    {
+      "role": "roles/containeranalysis.notes.occurrences.viewer",
+      "members": [
+        "serviceAccount:service-PROJECT_ID@gcp-sa-binaryauthorization.iam.gserviceaccount.com"
+      ]
+    }
+  ]
+}
+id: //cloudkms.googleapis.com/v1/projects/PROJECT_ID/locations/global/keyRings/blog-keyring/cryptoKeys/cd-blog/cryptoKeyVersions/1
+pkixPublicKey:
+  publicKeyPem: |
+    -----BEGIN PUBLIC KEY-----
+    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUtQcsBvxTGLNiyTbf4hu2s/F+2D8
+    /ylPfVM8drjMD7WWUyRoyAi81GdvUAKeoi+s0+DHsmvG3QZmRJJJTmkjZw==
+    -----END PUBLIC KEY-----
+  signatureAlgorithm: ECDSA_P256_SHA256
+NAME: cb-attestor
+NOTE: projects/PROJECT_ID/notes/cb-attestor-note
+NUM_PUBLIC_KEYS: 1
+Create request issued for: [test-repo]
+Check operation [projects/PROJECT_ID/locations/us-central1/operations/e6afa3fb-5767-4e52-a402-e94d78d87b30] for status.
+Created topic [projects/PROJECT_ID/topics/clouddeploy-approvals].
+Deploying function (may take a while - up to 2 minutes)...working..
+For Cloud Build Logs, visit: https://console.cloud.google.com/cloud-build/builds;region=us-central1/94b30fc4-b2e4-4666-8549-e81fef63a304?project=PROJECT_ID
+Deploying function (may take a while - up to 2 minutes)...done.
+availableMemoryMb: 256
+buildId: 94b30fc4-b2e4-4666-8549-e81fef63a304
+buildName: projects/PROJECT_NUMBER/locations/us-central1/builds/94b30fc4-b2e4-4666-8549-e81fef63a304
+dockerRegistry: CONTAINER_REGISTRY
+entryPoint: cloudDeployApproval
+environmentVariables:
+  FROM_EMAIL: <<INSERT FROM EMAIL>>
+  SENDGRID_API_KEY: <<INSERT SENDGRID API KEY>>
+  TO_EMAIL: <<INSERT TO EMAIL>>
+eventTrigger:
+  eventType: google.pubsub.topic.publish
+  failurePolicy: {}
+  resource: projects/PROJECT_ID/topics/clouddeploy-approvals
+  service: pubsub.googleapis.com
+ingressSettings: ALLOW_ALL
+labels:
+  deployment-tool: cli-gcloud
+name: projects/PROJECT_ID/locations/us-central1/functions/my-blog-function
+runtime: nodejs16
+serviceAccountEmail: PROJECT_ID@appspot.gserviceaccount.com
+sourceUploadUrl: https://storage.googleapis.com/uploads-115308208805.us-central1.cloudfunctions.appspot.com/5f6dd5a2-bd5c-4d25-9826-147b4aa55ef7.zip
+status: ACTIVE
+timeout: 60s
+updateTime: '2022-08-28T20:52:11.527Z'
+versionId: '1'
+Default change: VPC-native is the default mode during cluster creation for versions greater than 1.21.0-gke.1500. To create advanced routes based clusters, please pass the `--no-enable-ip-alias` flag
+Default change: During creation of nodepools or autoscaling configuration changes for cluster versions greater than 1.24.1-gke.800 a default location policy is applied. For Spot and PVM it defaults to ANY, and for all other VM kinds a BALANCED policy is used. To change the default values use the `--location-policy` flag.
+Note: Your Pod address range (`--cluster-ipv4-cidr`) can accommodate at most 1008 node(s).
+Creating cluster test in us-central1... Cluster is being health-checked (master is healthy)...done.
+Created [https://container.googleapis.com/v1/projects/PROJECT_ID/zones/us-central1/clusters/test].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-central1/test?project=PROJECT_ID
+kubeconfig entry generated for test.
+NAME: test
+LOCATION: us-central1
+MASTER_VERSION: 1.22.11-gke.400
+MASTER_IP: 34.170.179.137
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.22.11-gke.400
+NUM_NODES: 3
+STATUS: RUNNING
+Default change: VPC-native is the default mode during cluster creation for versions greater than 1.21.0-gke.1500. To create advanced routes based clusters, please pass the `--no-enable-ip-alias` flag
+Default change: During creation of nodepools or autoscaling configuration changes for cluster versions greater than 1.24.1-gke.800 a default location policy is applied. For Spot and PVM it defaults to ANY, and for all other VM kinds a BALANCED policy is used. To change the default values use the `--location-policy` flag.
+Note: Your Pod address range (`--cluster-ipv4-cidr`) can accommodate at most 1008 node(s).
+Creating cluster staging in us-central1... Cluster is being health-checked (master is healthy)...done.
+Created [https://container.googleapis.com/v1/projects/PROJECT_ID/zones/us-central1/clusters/staging].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-central1/staging?project=PROJECT_ID
+kubeconfig entry generated for staging.
+NAME: staging
+LOCATION: us-central1
+MASTER_VERSION: 1.22.11-gke.400
+MASTER_IP: 35.239.179.38
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.22.11-gke.400
+NUM_NODES: 3
+STATUS: RUNNING
+Default change: VPC-native is the default mode during cluster creation for versions greater than 1.21.0-gke.1500. To create advanced routes based clusters, please pass the `--no-enable-ip-alias` flag
+Default change: During creation of nodepools or autoscaling configuration changes for cluster versions greater than 1.24.1-gke.800 a default location policy is applied. For Spot and PVM it defaults to ANY, and for all other VM kinds a BALANCED policy is used. To change the default values use the `--location-policy` flag.
+Note: Your Pod address range (`--cluster-ipv4-cidr`) can accommodate at most 1008 node(s).
+Creating cluster prod in us-central1... Cluster is being health-checked (master is healthy)...done.
+Created [https://container.googleapis.com/v1/projects/PROJECT_ID/zones/us-central1/clusters/prod].
+To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-central1/prod?project=PROJECT_ID
+kubeconfig entry generated for prod.
+NAME: prod
+LOCATION: us-central1
+MASTER_VERSION: 1.22.11-gke.400
+MASTER_IP: 104.155.138.65
+MACHINE_TYPE: n1-standard-2
+NODE_VERSION: 1.22.11-gke.400
+NUM_NODES: 3
+STATUS: RUNNING

@@ -1,8 +1,9 @@
 {
-    "name": "clouddeploy-pubsub",
+    "name": "clouddeploystatus-pubsub",
     "version": "0.0.1",
     "dependencies": {
       "@google-cloud/pubsub": "^0.18.0",
       "@sendgrid/mail": "7.7.0"
     }
   }
+  

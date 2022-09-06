@@ -17,10 +17,11 @@ apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
  name: test
-description: test cluster
+description: development cluster
 gke:
- cluster: projects/gcp-blog-test-01/locations/us-central1/clusters/test
+ cluster: projects/<<PROJECT_ID>>/locations/us-central1/clusters/test #Update with your product ID instead of <<PROJECT_ID>>
 ---
+
 
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
@@ -28,7 +29,7 @@ metadata:
  name: staging
 description: staging cluster
 gke:
- cluster: projects/gcp-blog-test-01/locations/us-central1/clusters/staging
+ cluster: projects/<<PROJECT_ID>>/locations/us-central1/clusters/staging #Update with your product ID instead of <<PROJECT_ID>>
 ---
 
 apiVersion: deploy.cloud.google.com/v1
@@ -38,4 +39,4 @@ metadata:
 description: production cluster
 requireApproval: true
 gke:
- cluster: projects/gcp-blog-test-01/locations/us-central1/clusters/prod
+ cluster: projects/<<PROJECT_ID>>/locations/us-central1/clusters/prod #Update with your product ID instead of <<PROJECT_ID>>

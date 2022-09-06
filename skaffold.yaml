@@ -3,4 +3,4 @@ kind: Config
 deploy:
   kubectl:
     manifests:
-      - cd-*
+      - k8s-*

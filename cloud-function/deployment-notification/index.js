@@ -4,19 +4,20 @@
  * @param {!Object} message Event payload.
  * @param {!Object} context Metadata for the event.
  */
- exports.cloudDeployApproval = (message, context) => {
+ exports.cloudDeployStatus = (message, context) => {
 
     const attributes = message.attributes
     action = attributes.Action;
   
-    if (action == 'Required') {
+    if (action == 'Failure') {
     const sendgrid = require('@sendgrid/mail');
     sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
-    rollout = attributes.Rollout
-    const rolloutSplit = rollout.split("/");
-    pipeline = rolloutSplit[5];
+    resource = attributes.Resource
+    console.log("resource: "+resource);
+    const resourceSplit = resource.split("/");
+    pipeline = resourceSplit[5];
     const location = attributes.Location;
-    const releaseid = rolloutSplit[7];
+    const releaseid = resourceSplit[7];
     const projectnbr = attributes.ProjectNumber;
   
     const slash = "/";
@@ -27,8 +28,8 @@
     const msg = {
       to: process.env.TO_EMAIL,
       from: process.env.FROM_EMAIL,
-      subject: 'Approval Needed: Google Cloud Deploy Rollout',
-      html: 'Hello! A Google Cloud Deploy rollout for pipeline <b>"' + pipeline + '" </b> needs your attention. To approve or reject the rollout click <a href=' + deployurl + '>here.</a>',
+      subject: 'Google Cloud Deploy Build Failed',
+      html: 'Hello! A Google Cloud Deploy rollout for pipeline <b>"' + pipeline + '" </b> is failed to deploy. Click <a href=' + deployurl + '>here to see deployment logs</a>',
   }
   try {
   sendgrid.send(msg);
