@@ -51,11 +51,11 @@ Below is the flow when we try to build and deploy a container image which has vu
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. 
 3. The build process fails with the error message that some critical vulerabilities were found in the image.
 
-Below is the flow when we try to deploy a container image to GKE which voilates a Binary Authorization policy -
+Below is the flow when we try to deploy a container image to GKE which voilates a Binary Authorization policy:
 
 1. Developer checks in the code to a github repo
-2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
-3. The container image is stored into Artifacts Registry.
+2. A Cloud Build trigger is configured to detect any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
+3. The container image is stored into Artifact Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
 Note - The deployment fails after the timeout value is exceeded set for your pipeline, which is 10 minutes by default, but you can change this value according to your needs, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
@@ -90,7 +90,7 @@ These steps are required to setup and prepare your GCP environment. We highly re
 
     ```gcloud config set project YOUR_PROJECT_ID```
 
-5. Run the following one-time script which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CICD pipeline for a sample docker application. Here's all the service deployments that will occur once the script finishes:
+5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CICD pipeline for deploying a sample docker application. Here's all the service deployments that will occur once the script finishes:
 
     a) Enables all the required cloud service APIs such as: Cloud Build, Binary Authorization, Kubernertes Service, Artiface Registry, Cloud Deploy and many more.
 
@@ -107,8 +107,8 @@ These steps are required to setup and prepare your GCP environment. We highly re
     f) Finally, create a pub/sub topic and cloud function which will allow for email approvals for any GKE deployment to production.
 
     <b>NOTE</b>
-    1. Before you run the script, please validate if your new GCP project already contains a "default" VPC and subnetwork. If you already have a "default" VPC, please go through the script and COMMENT out lines 55-57 which reference the creation of a default VPC and subnetwork. If you already have one, this step is not needed. 
-    2. By default, the creation of GKE clusters uses the "default" VPC subnetwork. If you prefer to use a non-default VPC, update the GKE cluster creation commands, starting at line 160 and udpate the `--subnetwork` value for all 3 GKE clusters.
+    1. Before you run the script, please validate if your new GCP project already contains a "default" VPC and subnetwork. If you already have a "default" VPC, please go through the script and COMMENT out lines 53-55 which reference the creation of a default VPC and subnetwork. If you already have one, this step is not needed. 
+    2. By default, the creation of GKE clusters uses the "default" VPC subnetwork. If you prefer to use a non-default VPC, update the GKE cluster creation commands, starting at line 157 and udpate the `--subnetwork` value for all 3 GKE clusters.
 
     To execute the script, run the following command:
 
