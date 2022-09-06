@@ -133,8 +133,9 @@ Create the GitHub Repository Integration for Cloud Build
 5. Once the integration is done, you will see your newly added repository under "Triggers" -> "Manage Repositories".
 ![Screenshot](./diagrams/screenshots/II_CloudBuild_4.jpg)
 
-Create a Trigger for Cloud Build
+Create a Trigger for Cloud Build 
 
+In GCP Console
 1. From the "Triggers" page, click on "+ Create Trigger"
 2. Enter/Select the following values for the Trigger:
 - Name: `cicd-blog-trigger`
@@ -151,7 +152,15 @@ Create a Trigger for Cloud Build
 `_SEVERITY`: `CRITICAL`
 NOTE: The value of these env variables is case sensitive! ![Screenshot](./diagrams/screenshots/II_CloudBuild_5.jpg)
 3. After the environment values are entered/selected, click "Create".
-4. Once the trigger is created, it will look like the following: ![Screenshot](./diagrams/screenshots/II_CloudBuild_6.jpg)
+
+Using the CLI
+
+1. If you want to kick off a build manually, run the following command through cloud shell or your local desktop to kick off the cloud build deployment:
+```
+gcloud builds submit --config=cloudbuild.yaml --substitutions=_CONTAINER_REPO_NAME="test-repo",_SEVERITY="CRITICAL" .
+```
+
+Once the trigger is created, it will look like the following: ![Screenshot](./diagrams/screenshots/II_CloudBuild_6.jpg)
 
 ### III. <b>Create Cloud Deploy Pipeline</b>
 
@@ -236,8 +245,18 @@ In the following sections, we'll go into further detail explaining both paths of
 
 ### I. <b>Run Cloud Build Configuration File for "Happy" Docker Path</b>
 
+1) Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
+
+2) Ensure your Cloud Build Trigger is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
+
+3) Since the trigger is already enabled, any changes to your forked/cloned repository will trigger this cloud build deployment.
+
+4) From your GitHub repo, open up the `cloudbuild.yaml`. This is the cloud build configuration file for the "Happy" Docker path.
+
+5)
+
 ### II. <b>Run Cloud Build Configuration File for "Vulnerable" Docker Path</b>
-1) Ensure your GitHub Repo is connected as a repository in Cloud Build.
+1) Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
 2) Edit the existing Trigger and update the Cloud Build configuration file location to be: `cloudbuild-vulnerable.yaml`
 
