@@ -40,7 +40,7 @@ Below is the flow of how the CI/CD piepeline is setup, without any security poli
 3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy is configured to go through an approval step before deploying the image to the Production GKE cluster. 
-6. Pre-configured email id recieves an email notifying that a Cloud Deploy release requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster.
+6. Pre-configured email id recieves an email notifying that a Cloud Deploy release requires your approval. The reciever of the email can then either approve or reject the deployment to the production GKE cluster. Cloud function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/blob/main/cloud-function/index.js)
 
 
 In order to secure this CI/CD pipeline, we will make use of a couple of Google Cloud's native features and services. First, we will enable vulerability check on the Artificats registry, which is a out of the box feature. Then finally, we will create a security policy using Binary Authorization service which only allows certain image to be deployed on a GKE cluster. 
@@ -51,14 +51,18 @@ Below is the flow when we try to build and deploy a container image which has vu
 2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. 
 3. The build process fails with the error message that some critical vulerabilities were found in the image.
 
-Below is the flow when we try to deploy a container image to GKE which voilates a Binary Authorization policy:
+Below is the flow when we try to deploy a container image to GKE which violates a Binary Authorization policy: 
 
 1. Developer checks in the code to a github repo
-2. A Cloud Build trigger is configured to detect any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
-3. The container image is stored into Artifact Registry.
+2. A Cloud Build trigger is configured to sense any new code push to this github repo and start the 'build' process. A successful build results into a docker container image.
+3. The container image is stored into Artifacts Registry.
 4. The Build process kicks of a Cloud Deploy deployment process which deploys the container image to three different GKE clusters, which are pre-configured as the deployment pipeline mimicing the test, staging and production environments. 
 5. Cloud Deploy fails as the GKE clusters reject the incoming image as it voilates the Binary Authorization policy. Please note that an approval email is still triggered before the production deployment, the reciever of the email is expected to reject this release based upon the failures in the previous stages.
+An email is sent about the deployment failure. Cloud function code can be found [here](https://github.com/sysdesign-code/dev-sec-ops-demo/tree/main/cloud-function/deployment-notification).
 Note - The deployment fails after the timeout value is exceeded set for your pipeline, which is 10 minutes by default, but you can change this value according to your needs, see [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout) for more details. 
+
+
+- Note : The Cloud Functions code provided for the rollout approval email and deployment failure notification is under the folder cloud-functions in this repo. You will still have to create these cloud functions with this code in your Google Cloud project to recieve email notifications.
 
 ## <b>Solution Architecture</b>
 
@@ -313,7 +317,7 @@ To view the failed deployment of docker image push to Artifact Registry because 
 
 To view the failed image deployment to GKE because of binary authorization policy enforcement:
 
-1. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg) Unfortunately, this is a feature of Cloud Deploy that will require some improvements. There is not a way to implement a timeout period.
+1. From the Cloud Deploy pipeline page, approximately 10 minutes later, the build for "test" and "staging" will eventually fail because the kubernetes manifest file for this docker image timed out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_7.jpg) To recap, you can change the timeout period to be shortner, additional details can be found [here](https://cloud.google.com/deploy/docs/deploying-application#change_the_deployment_timeout)
 
 2. From the GCP Console, go to the Kubernetes engine page and click on "Workloads". Here you will see the image deployments to both the "test" or "staging" GKE environments failed. The reason being is binary authorization policy enforcement. The "vulnerable" docker image is not approved for deployment. ![Screenshot](./diagrams/screenshots/II_GKE_4.jpg)
 
