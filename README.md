@@ -202,12 +202,12 @@ During the one-time-script run, this process created that a Pub/Sub topic and Cl
 
 To validate the Pub/Sub topics and Cloud Function was created, go to those respective services and ensure they were created.
 
-1. From your GCP Console homepage, type "Pub/Sub" within the search bar and select this service. The name of the Pub/Sub topic that should exist is called `clouddeploy-approvals`.
+1. From your GCP Console homepage, type "Pub/Sub" within the search bar and select this service. There will be two Pub/Sub topics and they're called `clouddeploy-approvals` and `clouddeploy-operations`.
 
 2. From your GCP Console homepage, type "Cloud Functions" within the search bar and select this service. 
-The name of the Cloud Function that should already exist is called `my-blog-function`.
+There will be two Cloud Functions and they're called `my-blog-function` and `my-blog-operations`.
 
-3. Click on `my-blog-function` and select "Variables"
+3. Click on `my-blog-function` and select "Variables".
 
 4. Click the "Edit" button and and expand the `Runtime, build, connections and security settings`.
 
@@ -218,6 +218,8 @@ For `TO_EMAIL`, select a primary email. For instance, the email of a DevOps Engi
 For `SENDGRID_API_KEY`, you will enter you API Key which will start with "SG.". If you haven't already, refer back to Pre-requisites section above, step 6 around how to create this key.
 
 6. After you've updated the cloud function environment variables, click "Next" and "Deploy" the updated function. This will take about 1-2 minutes. Once completed, the function will have a green check mark to validate its running.
+
+7. Repeat steps 4-6 from above for the other cloud function of `my-blog-operations`.
 
 ## <b>Step-by-Step instructions of testing and validating the GCP CI/CD piepline</b>
 
@@ -237,40 +239,76 @@ In the following sections, we'll go into further detail explaining both paths of
 
 ### I. <b>Run Cloud Build Configuration File for "Happy" Docker Path</b>
 
-1) Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
+1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
 
-2) Ensure your Cloud Build Trigger is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
+2. Ensure your Cloud Build trigger called `cicd-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
 
-3) Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
+3. Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
 
-4) From your GitHub repo, open up the `cloudbuild.yaml`. This is the cloud build configuration file for the "Happy" Docker path.
+4. From your GitHub repo, open up the `cloudbuild.yaml`. This is the cloud build configuration file for the "Happy" Docker path.
 
-5) 
+5. To kick off the build, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "Green" to "red".
 
-### II. <b>Run Cloud Build Configuration File for "Vulnerable" Docker Path</b>
+6. After you've made the change, push and commit the changes to your GitHub repo.
 
-1) Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
+7. From the GCP Console, go to the Cloud Build service and click on "History".
 
-2) Edit the existing Trigger and update the Cloud Build configuration file location to be: `cloudbuild-vulnerable.yaml`
+8. Since the trigger is enabled and integrated with your GitHub page, the build is automatically kicked off and you can click the custom build number, to see the log details. ![Screenshot](./diagrams/screenshots/II_CloudBuild_8.jpg)
 
-3) Update the "_SEVERITY" environment variable to be "HIGH" instead of "CRITICAL". Notes: This environment variable is case-sensitive, the value should be all caps.
+### II. <b>Validate Image Deployment for "Happy" Path</b>
 
-4) Make an update to one of the repo files and this will automatically kick start the cloud build process. The build will fail in "Step 2: Check For Vulnerabilities within the Image" because this image contains HIGH vunerabilities and cloud build will NOT push the image to be stored in artifact registry.
+1. Within that build, step 7-9 highlight the image deployment to GKE through Cloud Deploy. If you click on step 9, the result of the build states that the deployment to "prod" is awaiting approval. ![Screenshot](./diagrams/screenshots/II_CloudBuild_9.jpg)
 
-5) Go back to the Trigger for this cloud build and revert the "_SEVERITY" environment variable to be "CRITICAL".
+2. From the GCP Console, go to the Cloud Deploy homepage and click on the `ci-cd-test` pipeline.
 
-6) Re-run the build and validate the GKE release deployment via Cloud Build fails in both "test" and "staging" GKE clusters because the new docker_vulnerable image deployment defined by this cloud build is NOT allowed because of binary authorization policy enforcement.
+3. Within the pipeline, click on the release associated with the latest cloud build deployment. Here you see that the "Happy" image is deployed successfully to both "test" and "staging" but there's an approval process required for the "prod" cluster. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_4.jpg)
 
-### III. <b>Validate Image Deployment for "Happy" and "Vulnerable" paths for GKE</b>
+4. From the GCP Console, search for Kubernetes Engine and from the left hand navigation, click on "Workloads". Here you can see, that the deployment of the image is succesful in the two "test" and "staging" GKE environments. ![Screenshot](./diagrams/screenshots/II_GKE_2.jpg)
 
-In order to test and validate the pipeline, perform the following steps - 
+5. Now that the deployment is queued for production, when you setup your SendGRID API, check your primary email and validate that you received a notifcation for approval. It will look something like this. ![Screenshot](./diagrams/screenshots/II_Email_1.png) From the email, click the `here` hyperlink and it will take you to the cloud deploy pipeline page.
 
-- Step 1 - Kickoff the build process by pushing a code change to the github repo
-- Step 2 - Monitor the Cloud Build and check the build logs to ensure deployment is successful to test and staging
-- Step 3
-- .
-- .
-- Step n - Done
+6. From the Pipeline page, approve or reject the release so the deployment can be pushed to "prod" in GKE. In this case, we will approve. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_5.jpg)
+
+7. If you go back to the Kubernetes worload page, you'll see that the image roll-out to prod was successful. ![Screenshot](./diagrams/screenshots/II_GKE_3.jpg) In parallel, validate your Cloud Deploy, continuous deployment pipeline also confirms a successful roll-out. ![Screenshot](./diagrams/screenshots/II_CloudDeploy_6.jpg)
+
+### III. <b>Run Cloud Build Configuration File for "Vulnerable" Docker Path</b>
+
+To recap, we will show two failure paths with this deployment, which are: image vulnerabilities and binary authorization policy enforcement.
+
+A. First, failed deployment to push docker image to Artifact Registry because of severity specific vulnerabilities.
+
+1. Ensure your GitHub Repo is connected as a repository in Cloud Build. Refer back to section "Create the GitHub Repository Integration for Cloud Build" on how to do this.
+
+2. Ensure your Cloud Build Trigger called `cicd-blog-trigger` is created. Refer back to section "Create a Trigger for Cloud Build" on how to do this.
+
+3. Since the trigger is already enabled, any updates to your forked/cloned repository will trigger this cloud build deployment.
+
+4. From your GitHub repo, view the `cloudbuild-vulnerable.yaml` file. This is the cloud build configuration file for the "Vulnerable" Docker path.
+
+5. Edit the existing Trigger with the following: 
+
+- Click on the ellipses next to "RUN" and update the "Cloud Build configuration file location" to be: `cloudbuild-vulnerable.yaml` 
+
+- Update the "_SEVERITY" environment variable value to be `HIGH`. The reason why we're making a change in the severity of the vulnerabilities is because, the vunerability check will either PASS or FAIL a cloud build deployment if the image contains ANY `HIGH` vulnerabilities. 
+
+- Save the trigger and validate its status is "Enabled".
+
+6. To kick off the build, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "red" to "blue". After you've made the change, push and commit the changes to your GitHub repo.
+
+7. From the GCP Console, go to the Cloud Build service and click on "History".
+
+8. The build will fail in `Step 2: Check For Vulnerabilities within the Image` because this image contains `HIGH` vunerabilities and cloud build will NOT push the image to be stored in artifact registry. 
+
+B. Finally, a failed image deployment to GKE because of binary authorization policy enforcement.
+
+1. Go back to the Trigger configuration for this build and revert the "_SEVERITY" environment variable value to being `CRITICAL` instead of "HIGH".
+
+2. To kick off the build again, update the following `app.js` javascript files for the docker image. File is stored within the path `/src/static/js`. Edit line 56 and change the word "blue" to "aquablue". After you've made the change, push and commit the changes to your GitHub repo.
+
+3. From the GCP Console, go to the Cloud Deploy and check the latest results of the pipeline.
+
+### IV. <b>Validate Image Deployment for "Vulnerable" Path</b>
+
 
 ## <b>Conclusion and Further Reading</b>
 

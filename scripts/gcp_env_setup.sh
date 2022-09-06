@@ -140,6 +140,7 @@ gcloud artifacts repositories create test-repo \
 
 #Create Pub/Sub topic for email approval notification
 gcloud pubsub topics create clouddeploy-approvals
+gcloud pubsub topics create clouddeploy-operations
 
 #Create Cloud Function for email approval notification to deploy any worloads to productions
 gcloud functions deploy my-blog-function \
@@ -148,6 +149,15 @@ gcloud functions deploy my-blog-function \
   --source=./cloud-function \
   --entry-point=cloudDeployApproval \
   --trigger-topic=clouddeploy-approvals \
+  --env-vars-file env.yaml
+
+#Create Cloud Function for email notification if the workload deployment fails 
+gcloud functions deploy my-blog-operations \
+  --region=us-central1 \
+  --runtime=nodejs16 \
+  --source=./cloud-function/deployment-notification \
+  --entry-point=cloudDeployStatus \
+  --trigger-topic=clouddeploy-operations \
   --env-vars-file env.yaml
   
 #Create three GKE clusters for test, staging and production. The Node.js docker image will be deployed as a release through the Cloud Deploy pipeline first in "dev". Next, the image deployment will be rolled to the "staging" cluster and once its successful, pending approval, the final image roll-out will deploy to the "prod" cluster.
