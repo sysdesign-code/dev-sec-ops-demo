@@ -67,19 +67,14 @@ Note - The deployment fails after the timeout value is exceeded set for Cloud De
 
 ## <b>Solution Architecture</b>
 
-When you're setting up your environment for CI/CD, here are some of the prerequisities that's required before you can kick off your DevSecOps pipeline for managing and deploying applications on GCP using our documented CI/CD process.
+The CI/CD pipeline is constructed by putting the aforthmentioned Google Cloud services togather. Cloud Build service is at the center of automating the pipeline which cointaines all the steps we need to build and deploy our container image. Cloud Build executes the steps defined in a yaml file in a sequential manner. Its quite flexible in terms of how you want to define your 'build' and 'deploy' process and the service ensures to execute those steps in a reliable manner everytime.
 
-1. Create a new GCP project and ensure you have access to the Cloud Console and enable the APIs for Cloud Shell. 
+Below is what the design of the CI/CD pipeline looks like. 
 
-2. The GitHub repo that contains all of the sourcecode for this CI/CD process is [here](https://github.com/sysdesign-code/dev-sec-ops-demo). You can fork the repo to your local development machine or Cloud Shell.
-
-3. Within the GitHub repo, we have a one-time script that needs to be run which will enable and create the necessary steps for building your application framework and how to deploy and manage that application in GCP![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Env_Setup.jpeg)
-
-4. After the one-time-script finishes, the cloud build configuration file, in sequential order, will create a continuous integration of managing the roll-out of your container image on GCP.
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Integration.jpeg)
 
-5. Once the continuous integration process is setup, continuous deployment can be done using Cloud Deploy for rolling out your image deployments across multiple GKE clusters for application lifecycle of test and staging environments. Before rolling out into production, DevOps/SRE teams can approve/reject the roll-outs based on the outcome of test and staging environments. 
 ![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Continuous%20Deployment.jpeg)
+
 
 
 ## Step-by-Step instructions of creating the GCP CI/CD piepline
@@ -88,14 +83,20 @@ When you're setting up your environment for CI/CD, here are some of the prerequi
 
 These steps are required to setup and prepare your GCP environment. We highly recommend you create a new GCP Project as you're going to be running multiple cloud services within region "us-central1". 
 
-1. Fork or Clone the following GitHub Repo: https://github.com/sysdesign-code/dev-sec-ops-demo 
+1. Fork the following GitHub Repo: https://github.com/sysdesign-code/dev-sec-ops-demo 
 2. Create a new GCP Project, follow the steps here around how to provision and create one: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 3. Once your new project is created, enable Cloud SDK to allow CLI access for `gcloud` either in Cloud Shell or Personal Desktop. Follow the steps here: https://cloud.google.com/sdk/docs/install
 4. Once you've enabled CLI access, either through your Cloud Shell or local workstation, validate or set your project ID:
 
     ```gcloud config set project YOUR_PROJECT_ID```
 
-5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CI/CD pipeline for deploying a sample docker application. Here's all the service deployments that will occur once the script finishes:
+5. Run the following one-time script `/scripts/gcp_env_setup.sh` which creates and provisions the necessary GCP cloud services that will be required to create the DevSecOps CI/CD pipeline for deploying a sample docker application. 
+
+![Screenshot](./diagrams/DevSecOps%20Architecture%20Diagram%20-%20Env_Setup.jpeg)
+
+
+
+Here's all the service deployments that will occur once the script finishes:
 
     a) Enables all the required cloud service APIs such as: Cloud Build, Binary Authorization, Kubernertes Service, Artiface Registry, Cloud Deploy and many more.
 
