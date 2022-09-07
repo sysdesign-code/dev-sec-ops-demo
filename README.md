@@ -1,5 +1,5 @@
 
-# Building a secure DevSecOps CI/CD delivery pipeline using Google Cloud
+# Building a Secure CI/CD Pipeline using Google Cloud Native Services
 
 ## <b>Introduction</b>
 
