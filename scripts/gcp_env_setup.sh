@@ -171,7 +171,7 @@ gcloud container clusters create test \
     --num-nodes=1 \
     --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
     --labels=app=vulnapp-test \
-#    --subnetwork=default
+    --subnetwork=default
  
 #GKE Cluster for Staging environment
 gcloud container clusters create staging \
@@ -181,7 +181,7 @@ gcloud container clusters create staging \
     --num-nodes=1 \
     --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
     --labels=app=vulnapp-staging \
-#    --subnetwork=default
+    --subnetwork=default
 
 #GKE Cluster for Production environment
 gcloud container clusters create prod \
@@ -191,4 +191,4 @@ gcloud container clusters create prod \
     --num-nodes=1 \
     --binauthz-evaluation-mode=PROJECT_SINGLETON_POLICY_ENFORCE \
     --labels=app=vulnapp-prod \
-#    --subnetwork=default
+    --subnetwork=default
