@@ -325,4 +325,4 @@ We learned how we can secure a CI/CD pipeline using Google Cloud's native servic
 
 Additionally, Binary Authorization also writes all the events where the deployment of a container image is blocked due to the constraints defined by the security policy to the audit logs. You can create alerts on these log entries and notify the appropriate team members about the blocked deployment events.
 
-Lastly, all of the services used to build and secure the CI/CD pipeilines are serverless, which makes it very easy to spin up the whole infrastructure within a few minutes without worrying about maintaining or managing it, so that your teams can focus on building and releasing software in a faster, reliable and cost efficient manner.
+Lastly, all of the services used to build and secure the CI/CD pipeilines are serverless, which makes it very easy to spin up the whole infrastructure within a few minutes without worrying about maintaining or managing it, so that your teams can focus on building and releasing software in a faster, reliable and cost efficient manner..
